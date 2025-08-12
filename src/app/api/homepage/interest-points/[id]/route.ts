@@ -45,7 +45,10 @@ export async function GET(
     return NextResponse.json({ success: true, data: interestPoint });
   } catch (error: any) {
     const resolvedParams = await params;
-    console.error(`Failed to fetch interest point ${resolvedParams.id}:`, error);
+    console.error(
+      `Failed to fetch interest point ${resolvedParams.id}:`,
+      error
+    );
     const status = error.message.includes("Invalid ID") ? 400 : 500;
     return NextResponse.json(
       {
@@ -105,7 +108,10 @@ export async function PUT(
     return NextResponse.json({ success: true, data: updatedInterestPoint });
   } catch (error: any) {
     const resolvedParams = await params;
-    console.error(`Failed to update interest point ${resolvedParams.id}:`, error);
+    console.error(
+      `Failed to update interest point ${resolvedParams.id}:`,
+      error
+    );
     if (error instanceof Error && error.message.includes("Invalid ID")) {
       return NextResponse.json(
         { success: false, error: { message: error.message } },
@@ -117,7 +123,9 @@ export async function PUT(
       return NextResponse.json(
         {
           success: false,
-          error: { message: `Interest point with ID ${resolvedParams.id} not found.` },
+          error: {
+            message: `Interest point with ID ${resolvedParams.id} not found.`,
+          },
         },
         { status: 404 }
       );
@@ -153,7 +161,10 @@ export async function DELETE(
     );
   } catch (error: any) {
     const resolvedParams = await params;
-    console.error(`Failed to delete interest point ${resolvedParams.id}:`, error);
+    console.error(
+      `Failed to delete interest point ${resolvedParams.id}:`,
+      error
+    );
     if (error instanceof Error && error.message.includes("Invalid ID")) {
       return NextResponse.json(
         { success: false, error: { message: error.message } },
@@ -165,7 +176,9 @@ export async function DELETE(
       return NextResponse.json(
         {
           success: false,
-          error: { message: `Interest point with ID ${resolvedParams.id} not found.` },
+          error: {
+            message: `Interest point with ID ${resolvedParams.id} not found.`,
+          },
         },
         { status: 404 }
       );

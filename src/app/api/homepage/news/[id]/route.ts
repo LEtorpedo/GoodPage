@@ -119,7 +119,9 @@ export async function PUT(
       return NextResponse.json(
         {
           success: false,
-          error: { message: `News item with ID ${resolvedParams.id} not found.` },
+          error: {
+            message: `News item with ID ${resolvedParams.id} not found.`,
+          },
         },
         { status: 404 }
       );
@@ -164,7 +166,9 @@ export async function DELETE(
       return NextResponse.json(
         {
           success: false,
-          error: { message: `News item with ID ${resolvedParams.id} not found.` },
+          error: {
+            message: `News item with ID ${resolvedParams.id} not found.`,
+          },
         },
         { status: 404 }
       );

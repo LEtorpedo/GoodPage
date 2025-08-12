@@ -46,7 +46,10 @@ export async function GET(
     return NextResponse.json({ success: true, data: teachingEntry });
   } catch (error: any) {
     const resolvedParams = await params;
-    console.error(`Failed to fetch teaching entry ${resolvedParams.id}:`, error);
+    console.error(
+      `Failed to fetch teaching entry ${resolvedParams.id}:`,
+      error
+    );
     const status = error.message.includes("Invalid ID") ? 400 : 500;
     return NextResponse.json(
       {
@@ -106,7 +109,10 @@ export async function PUT(
     return NextResponse.json({ success: true, data: updatedTeachingEntry });
   } catch (error: any) {
     const resolvedParams = await params;
-    console.error(`Failed to update teaching entry ${resolvedParams.id}:`, error);
+    console.error(
+      `Failed to update teaching entry ${resolvedParams.id}:`,
+      error
+    );
     if (error instanceof Error && error.message.includes("Invalid ID")) {
       return NextResponse.json(
         { success: false, error: { message: error.message } },
@@ -118,7 +124,9 @@ export async function PUT(
       return NextResponse.json(
         {
           success: false,
-          error: { message: `Teaching entry with ID ${resolvedParams.id} not found.` },
+          error: {
+            message: `Teaching entry with ID ${resolvedParams.id} not found.`,
+          },
         },
         { status: 404 }
       );
@@ -154,7 +162,10 @@ export async function DELETE(
     );
   } catch (error: any) {
     const resolvedParams = await params;
-    console.error(`Failed to delete teaching entry ${resolvedParams.id}:`, error);
+    console.error(
+      `Failed to delete teaching entry ${resolvedParams.id}:`,
+      error
+    );
     if (error instanceof Error && error.message.includes("Invalid ID")) {
       return NextResponse.json(
         { success: false, error: { message: error.message } },
@@ -166,7 +177,9 @@ export async function DELETE(
       return NextResponse.json(
         {
           success: false,
-          error: { message: `Teaching entry with ID ${resolvedParams.id} not found.` },
+          error: {
+            message: `Teaching entry with ID ${resolvedParams.id} not found.`,
+          },
         },
         { status: 404 }
       );
