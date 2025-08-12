@@ -8,8 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "db:setup": "node ./scripts/setup-db.mjs",
-    "db:scan-gallery": "ts-node -T scripts/scan-gallery.ts",
-    "db:export-data": "ts-node -T scripts/export-all-data.ts"
+    "db:scan-gallery": "ts-node --project tsconfig.scripts.json scripts/scan-gallery.ts",
+    "db:export-data": "ts-node --project tsconfig.scripts.json scripts/export-all-data.ts"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
