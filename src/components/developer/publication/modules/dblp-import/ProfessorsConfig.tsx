@@ -226,14 +226,14 @@ const ProfessorsConfig: React.FC<ProfessorsConfigProps> = ({
               <li>
                 •{" "}
                 <code className="bg-gray-800 px-2 py-1 rounded">Jiahui Hu</code>{" "}
-                - Simple name format
+                - Simple name format (but easily matched to other people)
               </li>
               <li>
                 •{" "}
                 <code className="bg-gray-800 px-2 py-1 rounded">
                   Zichen Xu 0001
                 </code>{" "}
-                - Name with DBLP identifier
+                - Name with DBLP identifier (preferred)
               </li>
             </ul>
           </div>
