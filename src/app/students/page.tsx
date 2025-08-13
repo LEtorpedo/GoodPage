@@ -40,7 +40,7 @@ const studentResources = [
   },
   {
     icon: FileText,
-    href: "http://newslab.ece.ohio-state.edu/for students/resources/HighQualityPhDResearch.ppt",
+    href: "https://www.guan-group.com/documents/research/PhD-Research-Elements-of-Excellence.pdf",
     title: "PhD Research: Elements of Excellence",
     author: "Prof. Ness B. Shroff, The Ohio State University",
   },
@@ -119,7 +119,7 @@ const studentResources = [
   },
   {
     icon: FileText,
-    href: "https://www.brown.edu/academics/science-center/sites/brown.edu.academics.science-center/files/uploads/advancedLaTeX_0.pdf",
+    href: "https://www.cecm.sfu.ca/CAG/papers/AdvancedLatex.pdf",
     title: "Advanced LATEX",
     author: "Dan Parker and David Schwein",
   },
