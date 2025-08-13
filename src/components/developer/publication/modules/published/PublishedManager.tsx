@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { forwardRef, useImperativeHandle } from "react";
 import { themeColors } from "@/styles/theme";
 import {
   Dialog,
@@ -21,26 +21,35 @@ interface PublishedManagerProps {
   className?: string;
 }
 
+// 暴露给父组件的方法接口
+export interface PublishedManagerRef {
+  refreshPublications: () => void;
+}
+
 /**
  * 已发布出版物管理器
  * 组合各个小模块，提供完整的管理功能
  */
-const PublishedManager: React.FC<PublishedManagerProps> = ({
-  className = "",
-}) => {
-  // 使用管理器Hook
-  const {
-    publications,
-    isLoading,
-    error,
-    deletingIds,
-    isSubmitting,
-    refreshPublications,
-    createPublication,
-    updatePublication,
-    deletePublication,
-    clearError,
-  } = usePublishedManager();
+const PublishedManager = forwardRef<PublishedManagerRef, PublishedManagerProps>(
+  ({ className = "" }, ref) => {
+    // 使用管理器Hook
+    const {
+      publications,
+      isLoading,
+      error,
+      deletingIds,
+      isSubmitting,
+      refreshPublications,
+      createPublication,
+      updatePublication,
+      deletePublication,
+      clearError,
+    } = usePublishedManager();
+
+    // 暴露方法给父组件
+    useImperativeHandle(ref, () => ({
+      refreshPublications,
+    }), [refreshPublications]);
 
   // 使用对话框Hook
   const {
@@ -137,6 +146,9 @@ const PublishedManager: React.FC<PublishedManagerProps> = ({
       </Dialog>
     </div>
   );
-};
+}
+);
+
+PublishedManager.displayName = "PublishedManager";
 
 export default PublishedManager;

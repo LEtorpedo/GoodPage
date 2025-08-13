@@ -45,7 +45,7 @@ export const usePendingActions = (
       if (
         !window.confirm("Are you sure you want to approve this publication?")
       ) {
-        return;
+        return false; // 用户取消操作
       }
 
       addProcessingId(id);
@@ -55,11 +55,13 @@ export const usePendingActions = (
         await pendingApi.approve(id);
         removePublication(id);
         toast.success("Publication approved successfully!");
+        return true; // 操作成功
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : "Unknown error";
         setErrorState(`Failed to approve publication: ${errorMessage}`);
         toast.error("Failed to approve publication");
+        return false; // 操作失败
       } finally {
         removeProcessingId(id);
       }

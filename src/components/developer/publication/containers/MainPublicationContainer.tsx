@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { themeColors } from "@/styles/theme";
 import { BookUp, Clock, Upload, FileText, Database } from "lucide-react";
 
 // 导入管理器组件
-import PublishedManager from "../modules/published/PublishedManager";
+import PublishedManager, { PublishedManagerRef } from "../modules/published/PublishedManager";
 import PendingManager from "../modules/pending/PendingManager";
 import YamlImportManager from "../modules/yaml-import/YamlImportManager";
 import DblpImportManager from "../modules/dblp-import/DblpImportManager";
@@ -24,36 +24,54 @@ const MainPublicationContainer: React.FC<MainPublicationContainerProps> = ({
   className = "",
 }) => {
   const [activeTab, setActiveTab] = useState<TabType>("published");
+  const publishedManagerRef = useRef<PublishedManagerRef>(null);
+
+  // 处理 pending 审核成功后的回调
+  const handlePendingApproved = useCallback(() => {
+    // 刷新 published 区域的数据
+    if (publishedManagerRef.current) {
+      publishedManagerRef.current.refreshPublications();
+    }
+  }, []);
 
   const tabs = [
     {
       id: "published" as TabType,
       label: "Published",
       icon: BookUp,
-      component: PublishedManager,
     },
     {
       id: "pending" as TabType,
       label: "Pending Review",
       icon: Clock,
-      component: PendingManager,
     },
     {
       id: "import" as TabType,
       label: "Import YAML",
       icon: Upload,
-      component: YamlImportManager,
     },
     {
       id: "dblp-import" as TabType,
       label: "DBLP Import",
       icon: Database,
-      component: DblpImportManager,
     },
   ];
 
-  const ActiveComponent =
-    tabs.find((tab) => tab.id === activeTab)?.component || PublishedManager;
+  // 渲染对应的组件
+  const renderActiveComponent = () => {
+    switch (activeTab) {
+      case "published":
+        return <PublishedManager ref={publishedManagerRef} />;
+      case "pending":
+        return <PendingManager onApproved={handlePendingApproved} />;
+      case "import":
+        return <YamlImportManager />;
+      case "dblp-import":
+        return <DblpImportManager />;
+      default:
+        return <PublishedManager ref={publishedManagerRef} />;
+    }
+  };
 
   return (
     <div className={`w-full space-y-6 ${className}`}>
@@ -86,7 +104,7 @@ const MainPublicationContainer: React.FC<MainPublicationContainerProps> = ({
 
       {/* 标签页内容 */}
       <div className="min-h-[600px]">
-        <ActiveComponent />
+        {renderActiveComponent()}
       </div>
     </div>
   );

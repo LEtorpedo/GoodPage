@@ -23,13 +23,17 @@ import { usePendingManager } from "./hooks/usePendingManager";
 
 interface PendingManagerProps {
   className?: string;
+  onApproved?: () => void; // 审核通过后的回调
 }
 
 /**
  * 待审核出版物管理器
  * 组合各个小模块，提供完整的管理功能
  */
-const PendingManager: React.FC<PendingManagerProps> = ({ className = "" }) => {
+const PendingManager: React.FC<PendingManagerProps> = ({
+  className = "",
+  onApproved
+}) => {
   // 使用待审核管理器Hook
   const {
     publications,
@@ -83,7 +87,11 @@ const PendingManager: React.FC<PendingManagerProps> = ({ className = "" }) => {
 
   // 处理批准
   const handleApprove = async (id: number) => {
-    await approvePublication(id);
+    const success = await approvePublication(id);
+    // 只有审核成功后才调用回调函数
+    if (success && onApproved) {
+      onApproved();
+    }
   };
 
   // 处理拒绝

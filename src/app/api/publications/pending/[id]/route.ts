@@ -105,14 +105,9 @@ export async function PUT(
       }
     }
 
-    // Ensure status is 'approved' when saving from editor
-    if (status !== "approved") {
-      console.warn(
-        `Editor attempted to save with status ${status}. Forcing to 'approved'.`
-      );
-      // Or return error: return NextResponse.json({ error: 'Invalid status for update' }, { status: 400 });
-    }
-    const finalStatus = "approved";
+    // 【修复】编辑 pending publication 时应该保持 pending_review 状态
+    // 只有 approve 操作才应该改为 published 状态
+    const finalStatus = "pending_review";
 
     // Use Prisma transaction to update publication and connect authors
     const updatedPublication = await prisma.$transaction(async (tx) => {
@@ -121,7 +116,7 @@ export async function PUT(
         where: { id: id },
         data: {
           ...updateData,
-          status: finalStatus, // Set status to approved
+          status: finalStatus, // 保持 pending_review 状态
         },
       });
 
