@@ -166,13 +166,14 @@ export default function RootLayout({
   }
 
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`flex flex-col min-h-screen`}>
+    <html lang="en" suppressHydrationWarning className={isDeveloperPath ? "dark" : ""}>
+      <body className={`flex flex-col min-h-screen ${isDeveloperPath ? "dark" : ""}`}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="light"
-          enableSystem
+          defaultTheme={isDeveloperPath ? "dark" : "light"}
+          enableSystem={!isDeveloperPath}
           disableTransitionOnChange
+          forcedTheme={isDeveloperPath ? "dark" : undefined}
         >
           <DeveloperModeProvider>
             <Navbar />

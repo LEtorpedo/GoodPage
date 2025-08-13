@@ -98,7 +98,7 @@ export const PasswordChangeForm: React.FC<PasswordChangeFormProps> = ({
   };
 
   return (
-    <Card className="mt-6 mb-6 dark:bg-gray-800 overflow-hidden border-green-500/50 dark:border-green-400/40 rounded-xl">
+    <Card className="mt-6 mb-6 overflow-hidden border-green-500/50 dark:border-green-400/40 rounded-xl">
       <CardHeader
         className="flex flex-row items-center justify-between cursor-pointer px-3 py-4"
         onClick={onToggle}
@@ -108,7 +108,7 @@ export const PasswordChangeForm: React.FC<PasswordChangeFormProps> = ({
         aria-controls={`password-content-${memberId}`}
       >
         <CardTitle className="text-lg flex items-center gap-2 text-green-700 dark:text-green-400">
-          <KeyRound className="h-5 w-5 text-green-500 dark:text-green-400" />{" "}
+          <KeyRound className="h-5 w-5" />{" "}
           Change Password
         </CardTitle>
         <Button

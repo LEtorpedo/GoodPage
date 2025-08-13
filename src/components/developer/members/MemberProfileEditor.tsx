@@ -1386,7 +1386,7 @@ export default function MemberProfileEditor({
   return (
     <div className="space-y-6 pb-10">
       {/* --- Avatar Upload & Preview --- */}
-      <Card className="dark:bg-gray-800 overflow-hidden border-green-500/50 dark:border-green-400/40 mb-6 rounded-xl">
+      <Card className="overflow-hidden border-green-500/50 dark:border-green-400/40 mb-6 rounded-xl">
         <CardHeader className="flex flex-row items-center gap-6 px-3 py-4">
           {/* 头像显示区 */}
           <div className="flex flex-col items-center justify-center">
@@ -1464,13 +1464,13 @@ export default function MemberProfileEditor({
       </Card>
 
       {/* --- Section 1: Basic Info --- */}
-      <Card className="dark:bg-gray-800 overflow-hidden border-green-500/50 dark:border-green-400/40">
+      <Card className="overflow-hidden border-green-500/50 dark:border-green-400/40">
         <CardHeader
           className="flex flex-row items-center justify-between cursor-pointer px-3 py-0"
           onClick={() => toggleSection("basicInfo")}
         >
           <CardTitle className="text-lg flex items-center gap-2 text-green-700 dark:text-green-400">
-            <Info className="h-5 w-5 text-green-500 dark:text-green-400" />
+            <Info className="h-5 w-5" />
             Basic Information
           </CardTitle>
           <Button
@@ -1658,7 +1658,7 @@ export default function MemberProfileEditor({
 
       {/* --- Section 2: Detailed Profile --- */}
       {/* Apply blue theme: border, title color, icon */}
-      <Card className="dark:bg-gray-800 overflow-hidden border-green-500/50 dark:border-green-400/40">
+      <Card className="overflow-hidden border-green-500/50 dark:border-green-400/40">
         {/* Change vertical padding to py-0 */}
         <CardHeader
           className="flex flex-row items-center justify-between cursor-pointer px-3 py-0"
@@ -1761,7 +1761,7 @@ export default function MemberProfileEditor({
       </Card>
 
       {/* --- Section 3: Links --- */}
-      <Card className="dark:bg-gray-800 overflow-hidden border-green-500/50 dark:border-green-400/40">
+      <Card className="overflow-hidden border-green-500/50 dark:border-green-400/40">
         {/* Change vertical padding to py-0 */}
         <CardHeader
           className="flex flex-row items-center justify-between cursor-pointer px-3 py-0"
@@ -1852,7 +1852,7 @@ export default function MemberProfileEditor({
       </Card>
 
       {/* --- Section 4: Education History --- */}
-      <Card className="mb-6 dark:bg-gray-800 overflow-hidden border-green-500/50 dark:border-green-400/40">
+      <Card className="mb-6 overflow-hidden border-green-500/50 dark:border-green-400/40">
         {/* Change vertical padding to py-0 */}
         <CardHeader
           className="flex flex-row items-center justify-between cursor-pointer px-3 py-0"
@@ -1983,7 +1983,7 @@ export default function MemberProfileEditor({
       </Card>
 
       {/* --- Section 5: Awards --- */}
-      <Card className="mb-6 dark:bg-gray-800 overflow-hidden border-green-500/50 dark:border-green-400/40">
+      <Card className="mb-6 overflow-hidden border-green-500/50 dark:border-green-400/40">
         {/* Change vertical padding to py-0 */}
         <CardHeader
           className="flex flex-row items-center justify-between cursor-pointer px-3 py-0"
@@ -2124,7 +2124,7 @@ export default function MemberProfileEditor({
       </Card>
 
       {/* --- Section 6: Featured Publications --- */}
-      <Card className="mb-6 dark:bg-gray-800 overflow-hidden border-green-500/50 dark:border-green-400/40">
+      <Card className="mb-6 overflow-hidden border-green-500/50 dark:border-green-400/40">
         {/* Change vertical padding to py-0 */}
         <CardHeader
           className="flex flex-row items-center justify-between cursor-pointer px-3 py-0"
@@ -2210,7 +2210,7 @@ export default function MemberProfileEditor({
       </Card>
 
       {/* --- Section 7: Projects --- */}
-      <Card className="mb-6 dark:bg-gray-800 overflow-hidden border-green-500/50 dark:border-green-400/40">
+      <Card className="mb-6 overflow-hidden border-green-500/50 dark:border-green-400/40">
         {/* Change vertical padding to py-0 */}
         <CardHeader
           className="flex flex-row items-center justify-between cursor-pointer px-3 py-0"
@@ -2360,7 +2360,7 @@ export default function MemberProfileEditor({
       </Card>
 
       {/* --- Section 8: Presentations --- */}
-      <Card className="mb-6 dark:bg-gray-800 overflow-hidden border-green-500/50 dark:border-green-400/40">
+      <Card className="mb-6 overflow-hidden border-green-500/50 dark:border-green-400/40">
         <CardHeader
           className="flex flex-row items-center justify-between cursor-pointer px-3 py-0"
           onClick={() => toggleSection("presentations")}
@@ -2499,7 +2499,7 @@ export default function MemberProfileEditor({
       </Card>
 
       {/* --- Section 9: Software & Datasets --- */}
-      <Card className="mb-6 dark:bg-gray-800 overflow-hidden border-green-500/50 dark:border-green-400/40">
+      <Card className="mb-6 overflow-hidden border-green-500/50 dark:border-green-400/40">
         <CardHeader
           className="flex flex-row items-center justify-between cursor-pointer px-3 py-0"
           onClick={() => toggleSection("softwareDatasets")}
@@ -2651,7 +2651,7 @@ export default function MemberProfileEditor({
       </Card>
 
       {/* --- Section 10: Patents --- */}
-      <Card className="mb-6 dark:bg-gray-800 overflow-hidden border-green-500/50 dark:border-green-400/40">
+      <Card className="mb-6 overflow-hidden border-green-500/50 dark:border-green-400/40">
         <CardHeader
           className="flex flex-row items-center justify-between cursor-pointer px-3 py-0"
           onClick={() => toggleSection("patents")}
@@ -2701,7 +2701,7 @@ export default function MemberProfileEditor({
       </Card>
 
       {/* --- Section 11: Academic Services --- */}
-      <Card className="mb-6 dark:bg-gray-800 overflow-hidden border-green-500/50 dark:border-green-400/40">
+      <Card className="mb-6 overflow-hidden border-green-500/50 dark:border-green-400/40">
         <CardHeader
           className="flex flex-row items-center justify-between cursor-pointer px-3 py-0"
           onClick={() => toggleSection("academicServices")}
