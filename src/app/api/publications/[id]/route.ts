@@ -164,9 +164,12 @@ const updatePublicationSchema = z.object({
   type: z.nativeEnum(PublicationType).optional(), // Use imported PublicationType
   pdf_url: z
     .string()
-    .url({ message: "Invalid PDF URL format." })
     .nullable()
-    .optional(),
+    .optional()
+    .transform((val) => (val === "" ? null : val))
+    .refine((val) => val === null || z.string().url().safeParse(val).success, {
+      message: "Invalid PDF URL format.",
+    }),
   doi: z.string().nullable().optional(),
   abstract: z.string().nullable().optional(),
   bibtex: z.string().nullable().optional(),
@@ -271,8 +274,9 @@ export async function PUT(request: Request, { params }: RouteParams) {
       );
     }
 
-    // Separate authors_full_string from other publication data
-    const { authors_full_string, ...publicationData } = validationResult.data;
+    // 保留所有数据，包括 authors_full_string，因为它也是数据库字段
+    const publicationData = validationResult.data;
+    const { authors_full_string } = validationResult.data;
 
     console.log(
       `[API PUT /api/publications/${id}] Validated publication data:`,
@@ -374,10 +378,10 @@ export async function PUT(request: Request, { params }: RouteParams) {
     // 3. Perform update within a transaction
     const updatedPublicationWithAuthors = await prisma.$transaction(
       async (tx) => {
-        // Step 1: Update the Publication's own fields (excluding the raw authors string)
+        // Step 1: Update the Publication's own fields (包括 authors_full_string)
         await tx.publication.update({
           where: { id: publicationId },
-          data: publicationData, // Use data WITHOUT authors_full_string
+          data: publicationData, // 包含所有验证过的数据，包括 authors_full_string
         });
 
         // Step 2: Delete ALL existing author links for this publication
