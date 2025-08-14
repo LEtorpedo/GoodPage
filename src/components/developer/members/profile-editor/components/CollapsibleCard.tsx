@@ -43,15 +43,13 @@ export function CollapsibleCard({
           height: isOpen ? "auto" : 0,
           opacity: isOpen ? 1 : 0,
         }}
-        transition={{ 
-          duration: ANIMATION_CONFIG.duration, 
-          ease: ANIMATION_CONFIG.ease 
+        transition={{
+          duration: ANIMATION_CONFIG.duration,
+          ease: ANIMATION_CONFIG.ease,
         }}
         style={{ overflow: "hidden" }}
       >
-        <CardContent className={CARD_STYLES.content}>
-          {children}
-        </CardContent>
+        <CardContent className={CARD_STYLES.content}>{children}</CardContent>
       </motion.div>
     </Card>
   );

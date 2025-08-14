@@ -94,7 +94,10 @@ export function PatentFormModal({
   /**
    * 处理输入变化
    */
-  const handleInputChange = (field: keyof PatentFormData, value: string | number) => {
+  const handleInputChange = (
+    field: keyof PatentFormData,
+    value: string | number
+  ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -160,7 +163,9 @@ export function PatentFormModal({
               <Input
                 id="patent_number"
                 value={formData.patent_number || ""}
-                onChange={(e) => handleInputChange("patent_number", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("patent_number", e.target.value)
+                }
                 placeholder="e.g., US10123456B2"
                 disabled={isSubmitting}
                 className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
@@ -175,7 +180,9 @@ export function PatentFormModal({
               <Textarea
                 id="inventors_string"
                 value={formData.inventors_string || ""}
-                onChange={(e) => handleInputChange("inventors_string", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("inventors_string", e.target.value)
+                }
                 placeholder="List all inventors (e.g., John Doe, Jane Smith, Bob Johnson)"
                 disabled={isSubmitting}
                 className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
@@ -192,7 +199,9 @@ export function PatentFormModal({
                 id="issue_date"
                 type="date"
                 value={formData.issue_date || ""}
-                onChange={(e) => handleInputChange("issue_date", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("issue_date", e.target.value)
+                }
                 disabled={isSubmitting}
                 className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
               />
@@ -250,7 +259,12 @@ export function PatentFormModal({
                 id="display_order"
                 type="number"
                 value={formData.display_order}
-                onChange={(e) => handleInputChange("display_order", parseInt(e.target.value) || 0)}
+                onChange={(e) =>
+                  handleInputChange(
+                    "display_order",
+                    parseInt(e.target.value) || 0
+                  )
+                }
                 min="0"
                 disabled={isSubmitting}
                 className="dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"

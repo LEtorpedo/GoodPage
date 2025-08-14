@@ -1,4 +1,9 @@
-import { useSensors, useSensor, PointerSensor, KeyboardSensor } from "@dnd-kit/core";
+import {
+  useSensors,
+  useSensor,
+  PointerSensor,
+  KeyboardSensor,
+} from "@dnd-kit/core";
 import { sortableKeyboardCoordinates, arrayMove } from "@dnd-kit/sortable";
 import type { DragEndEvent } from "@dnd-kit/core";
 import type { EditablePublication } from "../types";

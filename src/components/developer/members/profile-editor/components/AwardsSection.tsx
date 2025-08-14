@@ -59,7 +59,7 @@ export function AwardsSection({
               >
                 Add Award
               </Button>
-              
+
               {sortedAwards.length > 0 ? (
                 <ul className="space-y-3">
                   {sortedAwards.map((award) => (
@@ -93,7 +93,7 @@ export function AwardsSection({
                           </a>
                         )}
                       </div>
-                      
+
                       <div className="space-x-1 flex-shrink-0 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
                         {/* 编辑按钮 */}
                         <Button
@@ -105,7 +105,7 @@ export function AwardsSection({
                         >
                           <Pencil className="h-3.5 w-3.5" />
                         </Button>
-                        
+
                         {/* 删除按钮 */}
                         <AlertDialog>
                           <AlertDialogTrigger asChild>

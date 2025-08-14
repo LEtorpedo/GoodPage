@@ -17,7 +17,8 @@ import type {
 export const useModalStates = () => {
   // 教育历史模态框状态
   const [isEducationModalOpen, setIsEducationModalOpen] = useState(false);
-  const [editingEducationData, setEditingEducationData] = useState<Partial<Education> | null>(null);
+  const [editingEducationData, setEditingEducationData] =
+    useState<Partial<Education> | null>(null);
 
   // 获奖记录模态框状态
   const [isAwardModalOpen, setIsAwardModalOpen] = useState(false);
@@ -25,7 +26,8 @@ export const useModalStates = () => {
 
   // 教学记录模态框状态
   const [isTeachingModalOpen, setIsTeachingModalOpen] = useState(false);
-  const [editingTeaching, setEditingTeaching] = useState<Partial<Teaching> | null>(null);
+  const [editingTeaching, setEditingTeaching] =
+    useState<Partial<Teaching> | null>(null);
 
   // 项目模态框状态
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
@@ -34,16 +36,21 @@ export const useModalStates = () => {
   >(undefined);
 
   // 学术服务模态框状态
-  const [isAcademicServiceModalOpen, setIsAcademicServiceModalOpen] = useState(false);
-  const [editingAcademicService, setEditingAcademicService] = useState<AcademicService | null>(null);
+  const [isAcademicServiceModalOpen, setIsAcademicServiceModalOpen] =
+    useState(false);
+  const [editingAcademicService, setEditingAcademicService] =
+    useState<AcademicService | null>(null);
 
   // 演示报告模态框状态
   const [isPresentationModalOpen, setIsPresentationModalOpen] = useState(false);
-  const [editingPresentation, setEditingPresentation] = useState<Presentation | null>(null);
+  const [editingPresentation, setEditingPresentation] =
+    useState<Presentation | null>(null);
 
   // 软件和数据集模态框状态
-  const [isSoftwareDatasetModalOpen, setIsSoftwareDatasetModalOpen] = useState(false);
-  const [editingSoftwareAndDataset, setEditingSoftwareAndDataset] = useState<SoftwareDataset | null>(null);
+  const [isSoftwareDatasetModalOpen, setIsSoftwareDatasetModalOpen] =
+    useState(false);
+  const [editingSoftwareAndDataset, setEditingSoftwareAndDataset] =
+    useState<SoftwareDataset | null>(null);
 
   // 专利模态框状态
   const [isPatentModalOpen, setIsPatentModalOpen] = useState(false);
@@ -103,7 +110,9 @@ export const useModalStates = () => {
     setIsProjectModalOpen(true);
   };
 
-  const openEditProjectModal = (projectData: Project & { memberRole?: string }) => {
+  const openEditProjectModal = (
+    projectData: Project & { memberRole?: string }
+  ) => {
     setEditingProjectData(projectData);
     setIsProjectModalOpen(true);
   };

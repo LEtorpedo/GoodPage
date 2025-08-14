@@ -334,7 +334,8 @@ const YamlImportManager: React.FC = () => {
                           {file.name}
                         </p>
                         <p className={`text-sm ${themeColors.devDescText}`}>
-                          {formatFileSize(file.size)} • {new Date(file.lastModified).toLocaleDateString()}
+                          {formatFileSize(file.size)} •{" "}
+                          {new Date(file.lastModified).toLocaleDateString()}
                         </p>
                       </div>
                     </div>
@@ -364,7 +365,9 @@ const YamlImportManager: React.FC = () => {
                         onClick={() => handleFileDelete(file.name)}
                         disabled={deletingFiles.has(file.name)}
                         className={`inline-flex items-center px-3 py-2 border border-red-600 rounded-lg text-sm font-medium text-red-400 hover:bg-red-600 hover:text-white transition-colors ${
-                          deletingFiles.has(file.name) ? "opacity-50 cursor-not-allowed" : ""
+                          deletingFiles.has(file.name)
+                            ? "opacity-50 cursor-not-allowed"
+                            : ""
                         }`}
                       >
                         {deletingFiles.has(file.name) ? (
@@ -434,26 +437,32 @@ const YamlImportManager: React.FC = () => {
             </div>
           </div>
 
-          {importResult.duplicateTitles && importResult.duplicateTitles.length > 0 && (
-            <div className="mb-4 p-4 bg-yellow-900/30 border border-yellow-600/50 rounded-lg">
-              <p className={`text-sm ${themeColors.devDescText} mb-2 font-medium`}>
-                Skipped duplicate publications:
-              </p>
-              <div className="max-h-24 overflow-y-auto">
-                <ul className={`text-xs ${themeColors.devDescText} space-y-1`}>
-                  {importResult.duplicateTitles.map((title, index) => (
-                    <li key={index} className="truncate">
-                      • {title}
-                    </li>
-                  ))}
-                </ul>
+          {importResult.duplicateTitles &&
+            importResult.duplicateTitles.length > 0 && (
+              <div className="mb-4 p-4 bg-yellow-900/30 border border-yellow-600/50 rounded-lg">
+                <p
+                  className={`text-sm ${themeColors.devDescText} mb-2 font-medium`}
+                >
+                  Skipped duplicate publications:
+                </p>
+                <div className="max-h-24 overflow-y-auto">
+                  <ul
+                    className={`text-xs ${themeColors.devDescText} space-y-1`}
+                  >
+                    {importResult.duplicateTitles.map((title, index) => (
+                      <li key={index} className="truncate">
+                        • {title}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
           <div className="p-3 bg-blue-900/30 border border-blue-600/50 rounded-lg">
             <p className="text-blue-400 text-sm">
-              💡 Imported publications have been added to the "Pending Review" tab where you can review, edit, and publish them.
+              💡 Imported publications have been added to the "Pending Review"
+              tab where you can review, edit, and publish them.
             </p>
           </div>
         </div>
@@ -469,26 +478,39 @@ const YamlImportManager: React.FC = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <h5 className={`font-medium ${themeColors.devText} mb-3 text-green-400`}>
+            <h5
+              className={`font-medium ${themeColors.devText} mb-3 text-green-400`}
+            >
               File Management:
             </h5>
             <ul className={`text-sm ${themeColors.devDescText} space-y-2`}>
               <li className="flex items-start gap-2">
                 <span className="text-blue-400 mt-0.5">•</span>
-                <span><strong>Upload:</strong> Click "Upload YAML File" to add new YAML files to the system</span>
+                <span>
+                  <strong>Upload:</strong> Click "Upload YAML File" to add new
+                  YAML files to the system
+                </span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-blue-400 mt-0.5">•</span>
-                <span><strong>Import:</strong> Click "Import" button for any available YAML file to import publications</span>
+                <span>
+                  <strong>Import:</strong> Click "Import" button for any
+                  available YAML file to import publications
+                </span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-blue-400 mt-0.5">•</span>
-                <span><strong>Delete:</strong> Click "Delete" button to remove YAML files from the system</span>
+                <span>
+                  <strong>Delete:</strong> Click "Delete" button to remove YAML
+                  files from the system
+                </span>
               </li>
             </ul>
           </div>
           <div>
-            <h5 className={`font-medium ${themeColors.devText} mb-3 text-orange-400`}>
+            <h5
+              className={`font-medium ${themeColors.devText} mb-3 text-orange-400`}
+            >
               File Requirements:
             </h5>
             <ul className={`text-sm ${themeColors.devDescText} space-y-2`}>
@@ -498,11 +520,15 @@ const YamlImportManager: React.FC = () => {
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-blue-400 mt-0.5">•</span>
-                <span>The file should have a 'works' array with publication entries</span>
+                <span>
+                  The file should have a 'works' array with publication entries
+                </span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-blue-400 mt-0.5">•</span>
-                <span>Files are stored in the /data/yaml directory on the server</span>
+                <span>
+                  Files are stored in the /data/yaml directory on the server
+                </span>
               </li>
             </ul>
           </div>
@@ -526,7 +552,8 @@ const YamlImportManager: React.FC = () => {
                 </a>
               </p>
               <p className={`text-xs ${themeColors.devDescText}`}>
-                To update the YAML file, please fork the repository and use the workflow to generate new data.
+                To update the YAML file, please fork the repository and use the
+                workflow to generate new data.
               </p>
             </div>
           </div>

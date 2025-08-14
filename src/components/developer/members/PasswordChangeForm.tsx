@@ -108,8 +108,7 @@ export const PasswordChangeForm: React.FC<PasswordChangeFormProps> = ({
         aria-controls={`password-content-${memberId}`}
       >
         <CardTitle className="text-lg flex items-center gap-2 text-green-700 dark:text-green-400">
-          <KeyRound className="h-5 w-5" />{" "}
-          Change Password
+          <KeyRound className="h-5 w-5" /> Change Password
         </CardTitle>
         <Button
           variant="ghost"

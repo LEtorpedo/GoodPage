@@ -35,7 +35,9 @@ export const useMemberProfileState = (initialData: MemberProfileData) => {
   const [isVisibilityLoading, setIsVisibilityLoading] = useState(false);
 
   // 章节展开/折叠状态
-  const [openSections, setOpenSections] = useState<OpenSectionsState>(DEFAULT_OPEN_SECTIONS);
+  const [openSections, setOpenSections] = useState<OpenSectionsState>(
+    DEFAULT_OPEN_SECTIONS
+  );
 
   // 教育历史状态
   const [educationHistory, setEducationHistory] = useState<Education[]>(
@@ -53,9 +55,9 @@ export const useMemberProfileState = (initialData: MemberProfileData) => {
   );
 
   // 学术服务状态
-  const [academicServicesList, setAcademicServicesList] = useState<AcademicService[]>(
-    initialData.academicServices || []
-  );
+  const [academicServicesList, setAcademicServicesList] = useState<
+    AcademicService[]
+  >(initialData.academicServices || []);
 
   // 演示报告状态
   const [presentationList, setPresentationList] = useState<Presentation[]>(
@@ -63,9 +65,9 @@ export const useMemberProfileState = (initialData: MemberProfileData) => {
   );
 
   // 软件和数据集状态
-  const [softwareAndDatasetsList, setSoftwareAndDatasetsList] = useState<SoftwareDataset[]>(
-    initialData.softwareAndDatasets || []
-  );
+  const [softwareAndDatasetsList, setSoftwareAndDatasetsList] = useState<
+    SoftwareDataset[]
+  >(initialData.softwareAndDatasets || []);
 
   // 专利状态
   const [patentsList, setPatentsList] = useState<Patent[]>(
@@ -78,7 +80,9 @@ export const useMemberProfileState = (initialData: MemberProfileData) => {
   );
 
   // 特色发表论文状态
-  const [editablePublications, setEditablePublications] = useState<EditablePublication[]>(() => {
+  const [editablePublications, setEditablePublications] = useState<
+    EditablePublication[]
+  >(() => {
     return initialData.publications.map(
       (pub: any): EditablePublication => ({
         ...pub,

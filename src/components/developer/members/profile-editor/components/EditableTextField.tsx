@@ -36,7 +36,7 @@ export function EditableTextField({
   const handleSave = async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       // 验证数字输入
       const validation = validateNumberInput(value, inputType);
@@ -57,7 +57,9 @@ export function EditableTextField({
         toast.success(TOAST_MESSAGES.success.fieldUpdated(label));
       } else {
         setError(result.error || "Failed to update field.");
-        toast.error(TOAST_MESSAGES.error.fieldUpdateFailed(label, result.error));
+        toast.error(
+          TOAST_MESSAGES.error.fieldUpdateFailed(label, result.error)
+        );
       }
     } catch (err: any) {
       console.error(`Error updating ${fieldName}:`, err);

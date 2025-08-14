@@ -49,7 +49,7 @@ export function ProjectsSection({
         >
           Add Project
         </Button>
-        
+
         {sortedProjects.length > 0 ? (
           <ul className="space-y-3">
             {sortedProjects.map((pm) => (
@@ -88,7 +88,7 @@ export function ProjectsSection({
                     </a>
                   )}
                 </div>
-                
+
                 <div className="space-x-1 flex-shrink-0 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
                   {/* 编辑按钮 */}
                   <Button
@@ -100,7 +100,7 @@ export function ProjectsSection({
                   >
                     <Pencil className="h-3.5 w-3.5" />
                   </Button>
-                  
+
                   {/* 删除按钮 */}
                   <AlertDialog>
                     <AlertDialogTrigger asChild>

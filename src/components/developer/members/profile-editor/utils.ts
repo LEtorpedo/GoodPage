@@ -1,5 +1,9 @@
 import { MemberStatus } from "@prisma/client";
-import { MEMBER_STATUS_LABELS, SUPPORTED_AVATAR_TYPES, MAX_AVATAR_SIZE } from "./constants";
+import {
+  MEMBER_STATUS_LABELS,
+  SUPPORTED_AVATAR_TYPES,
+  MAX_AVATAR_SIZE,
+} from "./constants";
 import type { EditablePublication, EditableProjectInfo } from "./types";
 
 /**
@@ -51,7 +55,9 @@ export const validateAvatarFile = (
 export const sortEducationByYear = <T extends { start_year?: number | null }>(
   educationList: T[]
 ): T[] => {
-  return [...educationList].sort((a, b) => (b.start_year ?? 0) - (a.start_year ?? 0));
+  return [...educationList].sort(
+    (a, b) => (b.start_year ?? 0) - (a.start_year ?? 0)
+  );
 };
 
 /**
@@ -60,7 +66,7 @@ export const sortEducationByYear = <T extends { start_year?: number | null }>(
  * @returns 排序后的获奖记录列表
  */
 export const sortAwardsByYearAndOrder = <
-  T extends { year?: number | null; display_order?: number | null }
+  T extends { year?: number | null; display_order?: number | null },
 >(
   awardsList: T[]
 ): T[] => {
@@ -76,7 +82,9 @@ export const sortAwardsByYearAndOrder = <
  * @param projectsList 项目记录列表
  * @returns 排序后的项目记录列表
  */
-export const sortProjectsByYear = (projectsList: EditableProjectInfo[]): EditableProjectInfo[] => {
+export const sortProjectsByYear = (
+  projectsList: EditableProjectInfo[]
+): EditableProjectInfo[] => {
   return [...projectsList].sort(
     (a, b) => (b.project.start_year ?? 0) - (a.project.start_year ?? 0)
   );
@@ -98,10 +106,14 @@ export const sortPresentationsByYear = <T extends { year?: number | null }>(
  * @param academicServicesList 学术服务记录列表
  * @returns 排序后的学术服务记录列表
  */
-export const sortAcademicServicesByYear = <T extends { start_year?: number | null }>(
+export const sortAcademicServicesByYear = <
+  T extends { start_year?: number | null },
+>(
   academicServicesList: T[]
 ): T[] => {
-  return [...academicServicesList].sort((a, b) => (b.start_year ?? 0) - (a.start_year ?? 0));
+  return [...academicServicesList].sort(
+    (a, b) => (b.start_year ?? 0) - (a.start_year ?? 0)
+  );
 };
 
 /**
@@ -165,7 +177,9 @@ export const createDragStyle = (
   transition: string | undefined,
   isDragging: boolean
 ) => ({
-  transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
+  transform: transform
+    ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
+    : undefined,
   transition,
   opacity: isDragging ? 0.7 : 1,
   zIndex: isDragging ? 10 : "auto",
@@ -178,7 +192,9 @@ export const createDragStyle = (
  * @param publications 发表论文列表
  * @returns 特色更新数据数组
  */
-export const generateFeaturedUpdates = (publications: EditablePublication[]) => {
+export const generateFeaturedUpdates = (
+  publications: EditablePublication[]
+) => {
   return publications.map((pub, index) => ({
     publicationId: pub.id,
     isFeatured: pub.isFeatured,
@@ -202,7 +218,11 @@ export const isEmpty = (value: string | null | undefined): boolean => {
  * @param suffix 后缀（默认为"..."）
  * @returns 截断后的文本
  */
-export const truncateText = (text: string, maxLength: number, suffix = "..."): string => {
+export const truncateText = (
+  text: string,
+  maxLength: number,
+  suffix = "..."
+): string => {
   if (text.length <= maxLength) return text;
   return text.substring(0, maxLength - suffix.length) + suffix;
 };
@@ -232,7 +252,8 @@ export const debounce = <T extends (...args: any[]) => any>(
 export const deepClone = <T>(obj: T): T => {
   if (obj === null || typeof obj !== "object") return obj;
   if (obj instanceof Date) return new Date(obj.getTime()) as unknown as T;
-  if (obj instanceof Array) return obj.map(item => deepClone(item)) as unknown as T;
+  if (obj instanceof Array)
+    return obj.map((item) => deepClone(item)) as unknown as T;
   if (typeof obj === "object") {
     const clonedObj = {} as T;
     for (const key in obj) {

@@ -34,7 +34,7 @@ export const useAvatarUpload = (initialAvatarUrl: string, memberId: string) => {
       return;
     }
 
-    setAvatarState(prev => ({
+    setAvatarState((prev) => ({
       ...prev,
       avatarFile: file,
       avatarPreview: URL.createObjectURL(file),
@@ -47,7 +47,7 @@ export const useAvatarUpload = (initialAvatarUrl: string, memberId: string) => {
   const handleUploadAvatar = async () => {
     if (!avatarState.avatarFile) return;
 
-    setAvatarState(prev => ({ ...prev, isUploading: true }));
+    setAvatarState((prev) => ({ ...prev, isUploading: true }));
 
     try {
       const formData = new FormData();
@@ -63,10 +63,14 @@ export const useAvatarUpload = (initialAvatarUrl: string, memberId: string) => {
 
       if (data.success && data.url) {
         // 上传成功后，更新avatar_url字段
-        const updateRes = await updateMemberField(memberId, "avatar_url", data.url);
-        
+        const updateRes = await updateMemberField(
+          memberId,
+          "avatar_url",
+          data.url
+        );
+
         if (updateRes.success) {
-          setAvatarState(prev => ({
+          setAvatarState((prev) => ({
             ...prev,
             avatarUrl: data.url,
             avatarPreview: null,
@@ -85,7 +89,7 @@ export const useAvatarUpload = (initialAvatarUrl: string, memberId: string) => {
     } catch (err: any) {
       toast.error(TOAST_MESSAGES.error.avatarUploadFailed(err.message));
     } finally {
-      setAvatarState(prev => ({ ...prev, isUploading: false }));
+      setAvatarState((prev) => ({ ...prev, isUploading: false }));
     }
   };
 
@@ -96,7 +100,7 @@ export const useAvatarUpload = (initialAvatarUrl: string, memberId: string) => {
     if (avatarState.avatarPreview) {
       URL.revokeObjectURL(avatarState.avatarPreview);
     }
-    setAvatarState(prev => ({
+    setAvatarState((prev) => ({
       ...prev,
       avatarFile: null,
       avatarPreview: null,

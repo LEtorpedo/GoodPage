@@ -4,11 +4,20 @@ import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Info } from "lucide-react";
 import { toast } from "sonner";
 import { MemberStatus } from "@prisma/client";
-import { updateMemberStatus, updateMemberProfileVisibility } from "@/app/actions/memberActions";
+import {
+  updateMemberStatus,
+  updateMemberProfileVisibility,
+} from "@/app/actions/memberActions";
 import { CollapsibleCard } from "./CollapsibleCard";
 import { EditableTextField } from "./EditableTextField";
 import { formatStatusLabel } from "../utils";
@@ -51,7 +60,9 @@ export function BasicInfoSection({
       const result = await updateMemberStatus(initialData.id, newStatus);
       if (result.success) {
         setCurrentStatus(newStatus);
-        toast.success(TOAST_MESSAGES.success.statusUpdated(formatStatusLabel(newStatus)));
+        toast.success(
+          TOAST_MESSAGES.success.statusUpdated(formatStatusLabel(newStatus))
+        );
       } else {
         toast.error(TOAST_MESSAGES.error.statusUpdateFailed(result.error));
       }
@@ -69,7 +80,10 @@ export function BasicInfoSection({
   const handleVisibilityChange = async (checked: boolean) => {
     setIsVisibilityLoading(true);
     try {
-      const result = await updateMemberProfileVisibility(initialData.id, checked);
+      const result = await updateMemberProfileVisibility(
+        initialData.id,
+        checked
+      );
       if (result.success) {
         setIsPublic(checked);
         toast.success(TOAST_MESSAGES.success.visibilityUpdated(checked));

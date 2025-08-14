@@ -49,7 +49,7 @@ export function AcademicServicesSection({
         >
           Add Academic Service
         </Button>
-        
+
         {sortedServices.length > 0 ? (
           <ul className="space-y-3">
             {sortedServices.map((service) => (
@@ -75,7 +75,7 @@ export function AcademicServicesSection({
                     </p>
                   )}
                 </div>
-                
+
                 <div className="space-x-1 flex-shrink-0 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
                   {/* 编辑按钮 */}
                   <Button
@@ -87,7 +87,7 @@ export function AcademicServicesSection({
                   >
                     <Pencil className="h-3.5 w-3.5" />
                   </Button>
-                  
+
                   {/* 删除按钮 */}
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
@@ -106,7 +106,9 @@ export function AcademicServicesSection({
                           {CONFIRMATION_TEXTS.deleteTitle}
                         </AlertDialogTitle>
                         <AlertDialogDescription className="dark:text-gray-400">
-                          {CONFIRMATION_TEXTS.deleteDescription("academic service")}
+                          {CONFIRMATION_TEXTS.deleteDescription(
+                            "academic service"
+                          )}
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>

@@ -107,7 +107,7 @@ export default function MemberProfileEditor({
     // 章节状态
     openSections,
     toggleSection,
-    
+
     // 各种记录状态
     educationHistory,
     setEducationHistory,
@@ -125,7 +125,7 @@ export default function MemberProfileEditor({
     setPatentsList,
     projectsList,
     setProjectsList,
-    
+
     // 特色发表论文状态
     editablePublications,
     setEditablePublications,
@@ -141,42 +141,42 @@ export default function MemberProfileEditor({
     openAddEducationModal,
     openEditEducationModal,
     closeEducationModal,
-    
+
     // 获奖记录模态框
     isAwardModalOpen,
     editingAward,
     openAddAwardModal,
     openEditAwardModal,
     closeAwardModal,
-    
+
     // 教学记录模态框
     isTeachingModalOpen,
     editingTeaching,
     openAddTeachingModal,
     openEditTeachingModal,
     closeTeachingModal,
-    
+
     // 项目模态框
     isProjectModalOpen,
     editingProjectData,
     openAddProjectModal,
     openEditProjectModal,
     closeProjectModal,
-    
+
     // 学术服务模态框
     isAcademicServiceModalOpen,
     editingAcademicService,
     openAddServiceModal,
     openEditServiceModal,
     closeServiceModal,
-    
+
     // 演示报告模态框
     isPresentationModalOpen,
     editingPresentation,
     openAddPresentationModal,
     openEditPresentationModal,
     closePresentationModal,
-    
+
     // 软件和数据集模态框
     isSoftwareDatasetModalOpen,
     editingSoftwareAndDataset,
@@ -223,7 +223,8 @@ export default function MemberProfileEditor({
           throw new Error(result.error || "Failed to save education record.");
         }
       },
-      error: (err: any) => `Error: ${err.message || "An unknown error occurred"}`,
+      error: (err: any) =>
+        `Error: ${err.message || "An unknown error occurred"}`,
     });
   };
 
@@ -242,7 +243,8 @@ export default function MemberProfileEditor({
           throw new Error(result.error || "Failed to delete education record.");
         }
       },
-      error: (err: any) => `Error: ${err.message || "An unknown error occurred"}`,
+      error: (err: any) =>
+        `Error: ${err.message || "An unknown error occurred"}`,
     });
   };
 
@@ -291,7 +293,8 @@ export default function MemberProfileEditor({
           throw new Error(result.error || "Failed to delete award record.");
         }
       },
-      error: (err: any) => `Error: ${err.message || "An unknown error occurred"}`,
+      error: (err: any) =>
+        `Error: ${err.message || "An unknown error occurred"}`,
     });
   };
 
@@ -357,7 +360,8 @@ export default function MemberProfileEditor({
           throw new Error(result.error || "Failed to delete project record.");
         }
       },
-      error: (err: any) => `Error: ${err.message || "An unknown error occurred"}`,
+      error: (err: any) =>
+        `Error: ${err.message || "An unknown error occurred"}`,
     });
   };
 
@@ -386,7 +390,9 @@ export default function MemberProfileEditor({
           closePresentationModal();
           return `Presentation record ${presentationId ? "updated" : "added"} successfully!`;
         } else {
-          throw new Error(result.error || "Failed to save presentation record.");
+          throw new Error(
+            result.error || "Failed to save presentation record."
+          );
         }
       },
       error: (err: any) => parseZodError(err.message),
@@ -400,15 +406,18 @@ export default function MemberProfileEditor({
       loading: "Deleting presentation record...",
       success: (result) => {
         if (result.success) {
-          setPresentationList((prev) => 
+          setPresentationList((prev) =>
             prev.filter((pres) => pres.id !== presentationId)
           );
           return "Presentation record deleted successfully!";
         } else {
-          throw new Error(result.error || "Failed to delete presentation record.");
+          throw new Error(
+            result.error || "Failed to delete presentation record."
+          );
         }
       },
-      error: (err: any) => `Error: ${err.message || "An unknown error occurred"}`,
+      error: (err: any) =>
+        `Error: ${err.message || "An unknown error occurred"}`,
     });
   };
 
@@ -432,12 +441,17 @@ export default function MemberProfileEditor({
               )
             );
           } else {
-            setSoftwareAndDatasetsList((prev) => [...prev, result.softwareDataset!]);
+            setSoftwareAndDatasetsList((prev) => [
+              ...prev,
+              result.softwareDataset!,
+            ]);
           }
           closeSoftwareDatasetModal();
           return `Software/Dataset record ${recordId ? "updated" : "added"} successfully!`;
         } else {
-          throw new Error(result.error || "Failed to save software/dataset record.");
+          throw new Error(
+            result.error || "Failed to save software/dataset record."
+          );
         }
       },
       error: (err: any) => parseZodError(err.message),
@@ -456,10 +470,13 @@ export default function MemberProfileEditor({
           );
           return "Software/Dataset record deleted successfully!";
         } else {
-          throw new Error(result.error || "Failed to delete software/dataset record.");
+          throw new Error(
+            result.error || "Failed to delete software/dataset record."
+          );
         }
       },
-      error: (err: any) => `Error: ${err.message || "An unknown error occurred"}`,
+      error: (err: any) =>
+        `Error: ${err.message || "An unknown error occurred"}`,
     });
   };
 
@@ -483,12 +500,17 @@ export default function MemberProfileEditor({
               )
             );
           } else {
-            setAcademicServicesList((prev) => [...prev, result.academicService!]);
+            setAcademicServicesList((prev) => [
+              ...prev,
+              result.academicService!,
+            ]);
           }
           closeServiceModal();
           return `Academic service record ${serviceId ? "updated" : "added"} successfully!`;
         } else {
-          throw new Error(result.error || "Failed to save academic service record.");
+          throw new Error(
+            result.error || "Failed to save academic service record."
+          );
         }
       },
       error: (err: any) => parseZodError(err.message),
@@ -507,10 +529,13 @@ export default function MemberProfileEditor({
           );
           return "Academic service record deleted successfully!";
         } else {
-          throw new Error(result.error || "Failed to delete academic service record.");
+          throw new Error(
+            result.error || "Failed to delete academic service record."
+          );
         }
       },
-      error: (err: any) => `Error: ${err.message || "An unknown error occurred"}`,
+      error: (err: any) =>
+        `Error: ${err.message || "An unknown error occurred"}`,
     });
   };
 
@@ -561,7 +586,8 @@ export default function MemberProfileEditor({
           throw new Error(result.error || "Failed to delete patent record.");
         }
       },
-      error: (err: any) => `Error: ${err.message || "An unknown error occurred"}`,
+      error: (err: any) =>
+        `Error: ${err.message || "An unknown error occurred"}`,
     });
   };
 
@@ -581,10 +607,13 @@ export default function MemberProfileEditor({
         if (result.success) {
           return "Featured publications updated successfully!";
         } else {
-          throw new Error(result.error || "Failed to update featured publications.");
+          throw new Error(
+            result.error || "Failed to update featured publications."
+          );
         }
       },
-      error: (err: any) => `Error: ${err.message || "An unknown error occurred"}`,
+      error: (err: any) =>
+        `Error: ${err.message || "An unknown error occurred"}`,
     });
 
     try {
@@ -798,7 +827,9 @@ export default function MemberProfileEditor({
                 closeTeachingModal();
                 return `Teaching record ${teachingId ? "updated" : "added"} successfully!`;
               } else {
-                throw new Error(result.error || "Failed to save teaching record.");
+                throw new Error(
+                  result.error || "Failed to save teaching record."
+                );
               }
             },
             error: (err: any) => parseZodError(err.message),

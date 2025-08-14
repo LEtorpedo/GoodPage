@@ -47,106 +47,110 @@ const PublishedManager = forwardRef<PublishedManagerRef, PublishedManagerProps>(
     } = usePublishedManager();
 
     // 暴露方法给父组件
-    useImperativeHandle(ref, () => ({
-      refreshPublications,
-    }), [refreshPublications]);
+    useImperativeHandle(
+      ref,
+      () => ({
+        refreshPublications,
+      }),
+      [refreshPublications]
+    );
 
-  // 使用对话框Hook
-  const {
-    isOpen,
-    editingItem,
-    isEditMode,
-    openAddDialog,
-    openEditDialog,
-    closeDialog,
-  } = useDialog();
+    // 使用对话框Hook
+    const {
+      isOpen,
+      editingItem,
+      isEditMode,
+      openAddDialog,
+      openEditDialog,
+      closeDialog,
+    } = useDialog();
 
-  // 使用搜索Hook
-  const {
-    searchTerm,
-    setSearchTerm,
-    filteredPublications,
-    clearSearch,
-    hasSearch,
-    resultCount,
-  } = useSearch(publications);
+    // 使用搜索Hook
+    const {
+      searchTerm,
+      setSearchTerm,
+      filteredPublications,
+      clearSearch,
+      hasSearch,
+      resultCount,
+    } = useSearch(publications);
 
-  // 处理表单提交
-  const handleFormSubmit = async (data: any) => {
-    try {
-      if (isEditMode && editingItem) {
-        await updatePublication(editingItem.id, data);
-      } else {
-        await createPublication(data);
+    // 处理表单提交
+    const handleFormSubmit = async (data: any) => {
+      try {
+        if (isEditMode && editingItem) {
+          await updatePublication(editingItem.id, data);
+        } else {
+          await createPublication(data);
+        }
+        closeDialog();
+      } catch (error) {
+        // 错误已在Hook中处理
+        console.error("Form submission error:", error);
       }
-      closeDialog();
-    } catch (error) {
-      // 错误已在Hook中处理
-      console.error("Form submission error:", error);
-    }
-  };
+    };
 
-  return (
-    <div className={`space-y-6 ${className}`}>
-      {/* 头部区域 */}
-      <PublishedHeader
-        count={publications.length}
-        isLoading={isLoading}
-        onRefresh={refreshPublications}
-        onAdd={openAddDialog}
-      />
+    return (
+      <div className={`space-y-6 ${className}`}>
+        {/* 头部区域 */}
+        <PublishedHeader
+          count={publications.length}
+          isLoading={isLoading}
+          onRefresh={refreshPublications}
+          onAdd={openAddDialog}
+        />
 
-      {/* 搜索栏 */}
-      <div className="flex gap-3 items-start">
-        <div className="flex-1">
-          <SearchBar
-            value={searchTerm}
-            onChange={setSearchTerm}
-            onClear={clearSearch}
-            placeholder="Search by title, venue, author, year, type, abstract, keywords..."
-          />
+        {/* 搜索栏 */}
+        <div className="flex gap-3 items-start">
+          <div className="flex-1">
+            <SearchBar
+              value={searchTerm}
+              onChange={setSearchTerm}
+              onClear={clearSearch}
+              placeholder="Search by title, venue, author, year, type, abstract, keywords..."
+            />
+          </div>
+          <SearchHelp />
         </div>
-        <SearchHelp />
+
+        {/* 搜索结果提示 */}
+        {hasSearch && (
+          <div className={`text-sm ${themeColors.devDescText}`}>
+            Found {resultCount} publication{resultCount !== 1 ? "s" : ""}{" "}
+            matching "{searchTerm}"
+          </div>
+        )}
+
+        {/* 出版物列表 */}
+        <PublishedList
+          publications={filteredPublications}
+          isLoading={isLoading}
+          error={error}
+          deletingIds={deletingIds}
+          onEdit={openEditDialog}
+          onDelete={deletePublication}
+          onRetry={refreshPublications}
+        />
+
+        {/* 表单对话框 */}
+        <Dialog open={isOpen} onOpenChange={closeDialog}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>
+                {isEditMode ? "Edit Publication" : "Add New Publication"}
+              </DialogTitle>
+            </DialogHeader>
+            <PublicationForm
+              initialData={editingItem}
+              onSubmit={handleFormSubmit}
+              onCancel={closeDialog}
+              isSubmitting={isSubmitting}
+            />
+          </DialogContent>
+        </Dialog>
       </div>
-
-      {/* 搜索结果提示 */}
-      {hasSearch && (
-        <div className={`text-sm ${themeColors.devDescText}`}>
-          Found {resultCount} publication{resultCount !== 1 ? "s" : ""} matching
-          "{searchTerm}"
-        </div>
-      )}
-
-      {/* 出版物列表 */}
-      <PublishedList
-        publications={filteredPublications}
-        isLoading={isLoading}
-        error={error}
-        deletingIds={deletingIds}
-        onEdit={openEditDialog}
-        onDelete={deletePublication}
-        onRetry={refreshPublications}
-      />
-
-      {/* 表单对话框 */}
-      <Dialog open={isOpen} onOpenChange={closeDialog}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>
-              {isEditMode ? "Edit Publication" : "Add New Publication"}
-            </DialogTitle>
-          </DialogHeader>
-          <PublicationForm
-            initialData={editingItem}
-            onSubmit={handleFormSubmit}
-            onCancel={closeDialog}
-            isSubmitting={isSubmitting}
-          />
-        </DialogContent>
-      </Dialog>
-    </div>
-  );
-}
+    );
+  }
 );
 
 PublishedManager.displayName = "PublishedManager";

@@ -42,22 +42,26 @@ export function SortablePublicationItem({
       className={`
         group relative overflow-hidden
         border-2 rounded-lg transition-all duration-200
-        ${pub.isFeatured 
-          ? 'border-green-300 dark:border-green-600 bg-green-50 dark:bg-green-900/20 shadow-sm' 
-          : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 hover:border-blue-300 dark:hover:border-blue-600'
+        ${
+          pub.isFeatured
+            ? "border-green-300 dark:border-green-600 bg-green-50 dark:bg-green-900/20 shadow-sm"
+            : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 hover:border-blue-300 dark:hover:border-blue-600"
         }
-        ${isDragging ? 'shadow-xl ring-2 ring-blue-400 dark:ring-blue-500' : 'hover:shadow-md'}
+        ${isDragging ? "shadow-xl ring-2 ring-blue-400 dark:ring-blue-500" : "hover:shadow-md"}
       `}
     >
       {/* 左侧彩色条 */}
-      <div className={`
+      <div
+        className={`
         absolute left-0 top-0 bottom-0 w-1 transition-colors duration-200
-        ${pub.isFeatured 
-          ? 'bg-green-500 dark:bg-green-400' 
-          : 'bg-transparent group-hover:bg-blue-400'
+        ${
+          pub.isFeatured
+            ? "bg-green-500 dark:bg-green-400"
+            : "bg-transparent group-hover:bg-blue-400"
         }
-      `} />
-      
+      `}
+      />
+
       <div className="flex items-start space-x-3 p-4 pl-5">
         {/* 拖拽手柄 */}
         <div
@@ -86,7 +90,7 @@ export function SortablePublicationItem({
             <circle cx="15" cy="19" r="1" />
           </svg>
         </div>
-        
+
         {/* 复选框 */}
         <div className="flex-shrink-0 pt-1">
           <Checkbox
@@ -98,7 +102,7 @@ export function SortablePublicationItem({
             className="border-2 data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
           />
         </div>
-        
+
         {/* 论文详情 */}
         <div className="flex-grow min-w-0">
           <label
@@ -106,52 +110,62 @@ export function SortablePublicationItem({
             id={`featured-pub-label-${pub.id}`}
             className={`
               block text-sm font-semibold leading-tight cursor-pointer transition-colors
-              ${pub.isFeatured 
-                ? 'text-green-800 dark:text-green-200' 
-                : 'text-gray-900 dark:text-gray-100 hover:text-blue-700 dark:hover:text-blue-300'
+              ${
+                pub.isFeatured
+                  ? "text-green-800 dark:text-green-200"
+                  : "text-gray-900 dark:text-gray-100 hover:text-blue-700 dark:hover:text-blue-300"
               }
             `}
           >
             {pub.title}
           </label>
-          
+
           <div className="mt-2 flex items-center space-x-3 flex-wrap text-xs">
-            <span className={`
+            <span
+              className={`
               font-medium
-              ${pub.isFeatured 
-                ? 'text-green-700 dark:text-green-300' 
-                : 'text-gray-600 dark:text-gray-400'
+              ${
+                pub.isFeatured
+                  ? "text-green-700 dark:text-green-300"
+                  : "text-gray-600 dark:text-gray-400"
               }
-            `}>
+            `}
+            >
               {pub.venue}
             </span>
-            
-            <span className={`
+
+            <span
+              className={`
               px-2 py-1 rounded-full font-medium
-              ${pub.isFeatured 
-                ? 'bg-green-200 dark:bg-green-800 text-green-800 dark:text-green-200' 
-                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+              ${
+                pub.isFeatured
+                  ? "bg-green-200 dark:bg-green-800 text-green-800 dark:text-green-200"
+                  : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
               }
-            `}>
+            `}
+            >
               {pub.year}
             </span>
-            
+
             {pub.ccf_rank && (
-              <span className={`
+              <span
+                className={`
                 px-2 py-1 rounded-full text-xs font-bold
-                ${pub.ccf_rank === 'A' 
-                  ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400' 
-                  : pub.ccf_rank === 'B'
-                  ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400'
-                  : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400'
+                ${
+                  pub.ccf_rank === "A"
+                    ? "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400"
+                    : pub.ccf_rank === "B"
+                      ? "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400"
+                      : "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400"
                 }
-              `}>
+              `}
+              >
                 CCF {pub.ccf_rank}
               </span>
             )}
           </div>
         </div>
-        
+
         {/* 特色标识 */}
         {pub.isFeatured && (
           <div className="flex-shrink-0 pt-1">
@@ -164,7 +178,7 @@ export function SortablePublicationItem({
                 fill="currentColor"
                 className="drop-shadow-sm"
               >
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
               </svg>
               <span className="text-xs font-medium">Featured</span>
             </div>

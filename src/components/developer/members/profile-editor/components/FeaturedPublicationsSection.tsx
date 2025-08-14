@@ -2,7 +2,10 @@
 
 import React from "react";
 import { DndContext, closestCenter } from "@dnd-kit/core";
-import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import { Button } from "@/components/ui/button";
 import { CardFooter } from "@/components/ui/card";
 import { Star } from "lucide-react";
@@ -38,13 +41,13 @@ export function FeaturedPublicationsSection({
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
           Select and reorder publications to feature on your public profile.
         </p>
-        
+
         {publications.length === 0 && (
           <p className="text-center text-gray-500 dark:text-gray-400 py-4">
             No publications found for this member.
           </p>
         )}
-        
+
         {publications.length > 0 && (
           <DndContext
             sensors={sensors}
@@ -69,7 +72,7 @@ export function FeaturedPublicationsSection({
           </DndContext>
         )}
       </div>
-      
+
       {publications.length > 0 && (
         <CardFooter className="border-t dark:border-gray-700 p-3">
           <Button

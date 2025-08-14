@@ -110,31 +110,42 @@ export const PLACEHOLDER_TEXTS = {
  */
 export const TOAST_MESSAGES = {
   success: {
-    fieldUpdated: (fieldName: string) => `Field "${fieldName}" updated successfully.`,
+    fieldUpdated: (fieldName: string) =>
+      `Field "${fieldName}" updated successfully.`,
     statusUpdated: (status: string) => `Status updated to ${status}.`,
     visibilityUpdated: (isPublic: boolean) =>
       `Profile visibility updated to ${isPublic ? "Public" : "Private"}.`,
     avatarUploaded: "Avatar uploaded and saved successfully!",
-    recordAdded: (recordType: string) => `${recordType} record added successfully!`,
-    recordUpdated: (recordType: string) => `${recordType} record updated successfully!`,
-    recordDeleted: (recordType: string) => `${recordType} record deleted successfully!`,
+    recordAdded: (recordType: string) =>
+      `${recordType} record added successfully!`,
+    recordUpdated: (recordType: string) =>
+      `${recordType} record updated successfully!`,
+    recordDeleted: (recordType: string) =>
+      `${recordType} record deleted successfully!`,
     featuredPublicationsUpdated: "Featured publications updated successfully!",
   },
   error: {
     fieldUpdateFailed: (fieldName: string, error?: string) =>
       `Failed to update "${fieldName}": ${error || "Unknown error"}`,
-    statusUpdateFailed: (error?: string) => `Failed to update status: ${error || "Unknown error"}`,
+    statusUpdateFailed: (error?: string) =>
+      `Failed to update status: ${error || "Unknown error"}`,
     visibilityUpdateFailed: (error?: string) =>
       `Failed to update visibility: ${error || "Unknown error"}`,
-    avatarUploadFailed: (error?: string) => `Failed to upload avatar: ${error || "Unknown error"}`,
+    avatarUploadFailed: (error?: string) =>
+      `Failed to upload avatar: ${error || "Unknown error"}`,
     invalidFileType: "Only JPG, PNG, GIF, and WEBP images are supported.",
     fileSizeExceeded: "Image size must not exceed 5MB.",
     invalidNumber: "Please enter a valid number.",
-    recordOperationFailed: (operation: string, recordType: string, error?: string) =>
+    recordOperationFailed: (
+      operation: string,
+      recordType: string,
+      error?: string
+    ) =>
       `Failed to ${operation} ${recordType} record: ${error || "Unknown error"}`,
     featuredPublicationsUpdateFailed: (error?: string) =>
       `Failed to update featured publications: ${error || "Unknown error"}`,
-    unexpectedError: (error?: string) => `An unexpected error occurred: ${error || "Unknown error"}`,
+    unexpectedError: (error?: string) =>
+      `An unexpected error occurred: ${error || "Unknown error"}`,
   },
 } as const;
 
@@ -167,7 +178,9 @@ export const CARD_STYLES = {
  * 按钮样式类名
  */
 export const BUTTON_STYLES = {
-  primary: "bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 dark:text-white",
-  outline: "border-green-500 text-green-700 dark:border-green-400 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900",
+  primary:
+    "bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 dark:text-white",
+  outline:
+    "border-green-500 text-green-700 dark:border-green-400 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900",
   chevron: "self-center text-green-500 dark:text-green-400",
 } as const;

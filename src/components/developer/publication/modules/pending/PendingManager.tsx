@@ -32,7 +32,7 @@ interface PendingManagerProps {
  */
 const PendingManager: React.FC<PendingManagerProps> = ({
   className = "",
-  onApproved
+  onApproved,
 }) => {
   // 使用待审核管理器Hook
   const {

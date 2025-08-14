@@ -5,7 +5,9 @@ import { themeColors } from "@/styles/theme";
 import { BookUp, Clock, Upload, FileText, Database } from "lucide-react";
 
 // 导入管理器组件
-import PublishedManager, { PublishedManagerRef } from "../modules/published/PublishedManager";
+import PublishedManager, {
+  PublishedManagerRef,
+} from "../modules/published/PublishedManager";
 import PendingManager from "../modules/pending/PendingManager";
 import YamlImportManager from "../modules/yaml-import/YamlImportManager";
 import DblpImportManager from "../modules/dblp-import/DblpImportManager";
@@ -103,9 +105,7 @@ const MainPublicationContainer: React.FC<MainPublicationContainerProps> = ({
       </div>
 
       {/* 标签页内容 */}
-      <div className="min-h-[600px]">
-        {renderActiveComponent()}
-      </div>
+      <div className="min-h-[600px]">{renderActiveComponent()}</div>
     </div>
   );
 };

@@ -46,7 +46,7 @@ export function SoftwareDatasetSection({
         >
           Add Software/Dataset
         </Button>
-        
+
         {softwareAndDatasetsList.length > 0 ? (
           <ul className="space-y-3">
             {softwareAndDatasetsList.map((record) => (
@@ -59,14 +59,17 @@ export function SoftwareDatasetSection({
                     {record.title}
                   </p>
                   <div className="flex items-center space-x-4 mt-1">
-                    <span className={`
+                    <span
+                      className={`
                       inline-block px-2 py-1 rounded-full text-xs font-medium
-                      ${record.type === 'SOFTWARE' 
-                        ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400' 
-                        : 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
+                      ${
+                        record.type === "SOFTWARE"
+                          ? "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400"
+                          : "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
                       }
-                    `}>
-                      {record.type === 'SOFTWARE' ? 'Software' : 'Dataset'}
+                    `}
+                    >
+                      {record.type === "SOFTWARE" ? "Software" : "Dataset"}
                     </span>
                     {record.status && (
                       <span className="inline-block bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-2 py-1 rounded-full text-xs font-medium">
@@ -112,7 +115,7 @@ export function SoftwareDatasetSection({
                     )}
                   </div>
                 </div>
-                
+
                 <div className="space-x-1 flex-shrink-0 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
                   {/* 编辑按钮 */}
                   <Button
@@ -124,7 +127,7 @@ export function SoftwareDatasetSection({
                   >
                     <Pencil className="h-3.5 w-3.5" />
                   </Button>
-                  
+
                   {/* 删除按钮 */}
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
@@ -143,7 +146,9 @@ export function SoftwareDatasetSection({
                           {CONFIRMATION_TEXTS.deleteTitle}
                         </AlertDialogTitle>
                         <AlertDialogDescription className="dark:text-gray-400">
-                          {CONFIRMATION_TEXTS.deleteDescription("software/dataset")}
+                          {CONFIRMATION_TEXTS.deleteDescription(
+                            "software/dataset"
+                          )}
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>

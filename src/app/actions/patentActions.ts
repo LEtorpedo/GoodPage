@@ -16,9 +16,12 @@ const PatentFormSchema = z.object({
     .string()
     .optional()
     .nullable()
-    .refine((val) => !val || val === "" || z.string().url().safeParse(val).success, {
-      message: "Invalid URL format",
-    }),
+    .refine(
+      (val) => !val || val === "" || z.string().url().safeParse(val).success,
+      {
+        message: "Invalid URL format",
+      }
+    ),
   display_order: z.number().int().min(0).default(0),
 });
 
@@ -154,9 +157,7 @@ export async function updatePatentRecord(
 }
 
 // 删除专利记录
-export async function deletePatentRecord(
-  patentId: number
-): Promise<{
+export async function deletePatentRecord(patentId: number): Promise<{
   success: boolean;
   error?: string;
 }> {

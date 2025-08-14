@@ -49,7 +49,7 @@ export function PresentationsSection({
         >
           Add Presentation
         </Button>
-        
+
         {sortedPresentations.length > 0 ? (
           <ul className="space-y-3">
             {sortedPresentations.map((presentation) => (
@@ -106,7 +106,7 @@ export function PresentationsSection({
                     )}
                   </div>
                 </div>
-                
+
                 <div className="space-x-1 flex-shrink-0 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
                   {/* 编辑按钮 */}
                   <Button
@@ -118,7 +118,7 @@ export function PresentationsSection({
                   >
                     <Pencil className="h-3.5 w-3.5" />
                   </Button>
-                  
+
                   {/* 删除按钮 */}
                   <AlertDialog>
                     <AlertDialogTrigger asChild>

@@ -54,7 +54,7 @@ export function PatentsSection({
         >
           Add Patent
         </Button>
-        
+
         {sortedPatents.length > 0 ? (
           <ul className="space-y-3">
             {sortedPatents.map((patent) => (
@@ -79,7 +79,8 @@ export function PatentsSection({
                   <div className="flex items-center space-x-4 mt-1">
                     {patent.issue_date && (
                       <span className="text-xs text-gray-500 dark:text-gray-400">
-                        Issued: {new Date(patent.issue_date).toLocaleDateString()}
+                        Issued:{" "}
+                        {new Date(patent.issue_date).toLocaleDateString()}
                       </span>
                     )}
                     {patent.status && (
@@ -99,7 +100,7 @@ export function PatentsSection({
                     </a>
                   )}
                 </div>
-                
+
                 <div className="space-x-1 flex-shrink-0 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
                   {/* 编辑按钮 */}
                   <Button
@@ -111,7 +112,7 @@ export function PatentsSection({
                   >
                     <Pencil className="h-3.5 w-3.5" />
                   </Button>
-                  
+
                   {/* 删除按钮 */}
                   <AlertDialog>
                     <AlertDialogTrigger asChild>

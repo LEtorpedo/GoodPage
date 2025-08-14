@@ -15,11 +15,8 @@ export function AvatarUpload({
   currentAvatarUrl,
   memberName,
 }: AvatarUploadProps) {
-  const {
-    avatarState,
-    handleAvatarChange,
-    handleUploadAvatar,
-  } = useAvatarUpload(currentAvatarUrl, memberId);
+  const { avatarState, handleAvatarChange, handleUploadAvatar } =
+    useAvatarUpload(currentAvatarUrl, memberId);
 
   return (
     <Card className="overflow-hidden border-green-500/50 dark:border-green-400/40 mb-6 rounded-xl">
@@ -35,7 +32,7 @@ export function AvatarUpload({
           />
           <span className="text-xs text-green-400">Avatar Preview</span>
         </div>
-        
+
         {/* 上传控件与按钮 */}
         <div className="flex flex-col gap-2 flex-1">
           <input
@@ -57,7 +54,7 @@ export function AvatarUpload({
               <span>Select New Avatar</span>
             </Button>
           </label>
-          
+
           {avatarState.avatarPreview && (
             <Button
               variant="default"
@@ -94,7 +91,7 @@ export function AvatarUpload({
               )}
             </Button>
           )}
-          
+
           <span className="text-xs text-green-500">
             Supported: JPG/PNG/GIF/WEBP, Max 5MB
           </span>

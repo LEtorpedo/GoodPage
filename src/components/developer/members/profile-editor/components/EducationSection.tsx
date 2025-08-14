@@ -59,7 +59,7 @@ export function EducationSection({
               >
                 Add Education
               </Button>
-              
+
               {sortedEducation.length > 0 ? (
                 <ul className="space-y-3">
                   {sortedEducation.map((edu) => (
@@ -88,7 +88,7 @@ export function EducationSection({
                           </p>
                         )}
                       </div>
-                      
+
                       <div className="space-x-1 flex-shrink-0 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
                         {/* 编辑按钮 */}
                         <Button
@@ -100,7 +100,7 @@ export function EducationSection({
                         >
                           <Pencil className="h-3.5 w-3.5" />
                         </Button>
-                        
+
                         {/* 删除按钮 */}
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
@@ -119,7 +119,9 @@ export function EducationSection({
                                 {CONFIRMATION_TEXTS.deleteTitle}
                               </AlertDialogTitle>
                               <AlertDialogDescription className="dark:text-gray-400">
-                                {CONFIRMATION_TEXTS.deleteDescription("education")}
+                                {CONFIRMATION_TEXTS.deleteDescription(
+                                  "education"
+                                )}
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>

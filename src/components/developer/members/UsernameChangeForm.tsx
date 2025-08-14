@@ -120,8 +120,7 @@ export const UsernameChangeForm: React.FC<UsernameChangeFormProps> = ({
         aria-controls={`username-content-${memberId}`}
       >
         <CardTitle className="text-lg flex items-center gap-2 text-green-700 dark:text-green-400">
-          <UserCog className="h-5 w-5" />{" "}
-          Change Username
+          <UserCog className="h-5 w-5" /> Change Username
         </CardTitle>
         <Button
           variant="ghost"
