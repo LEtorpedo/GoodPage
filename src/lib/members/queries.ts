@@ -100,38 +100,33 @@ export async function getAllMembersGrouped(): Promise<
           (statusOrder[b as MemberStatus] || 99)
       )
       .forEach((key) => {
-        // 组内排序
+        // 组内排序 - 所有分组都按 display_order 排序
         sortedGroupedData[key] = grouped[key].sort((a, b) => {
-          if (
-            key === MemberStatus.PROFESSOR ||
-            key === MemberStatus.PHD_STUDENT
-          ) {
-            // 教授/博士生分组：按 display_order 升序（数值小的在前）
-            // @ts-ignore: MemberForCard 包含 display_order（来源于 Member）
-            const orderA = a.display_order ?? 0;
-            // @ts-ignore
-            const orderB = b.display_order ?? 0;
-            const cmp = orderA - orderB;
-            if (cmp !== 0) return cmp;
-            // 次级排序：保持原有逻辑的稳定性（按年份/姓名等）
+          // @ts-ignore: MemberForCard 包含 display_order（来源于 Member）
+          const orderA = a.display_order ?? 0;
+          // @ts-ignore
+          const orderB = b.display_order ?? 0;
+          
+          // 首先按 display_order 排序
+          if (orderA !== orderB) {
+            return orderA - orderB;
           }
-          {
-            // 其他分组：原有排序逻辑
-            const yearA = a.enrollment_year ?? Infinity;
-            const yearB = b.enrollment_year ?? Infinity;
-            const isStudentA =
-              a.status === MemberStatus.PHD_STUDENT ||
-              a.status === MemberStatus.MASTER_STUDENT ||
-              a.status === MemberStatus.UNDERGRADUATE;
+          
+          // 如果 display_order 相同，按原有逻辑作为备用排序
+          const yearA = a.enrollment_year ?? Infinity;
+          const yearB = b.enrollment_year ?? Infinity;
+          const isStudentA =
+            a.status === MemberStatus.PHD_STUDENT ||
+            a.status === MemberStatus.MASTER_STUDENT ||
+            a.status === MemberStatus.UNDERGRADUATE;
 
-            if (yearA !== yearB) {
-              return isStudentA ? yearA - yearB : yearB - yearA; // 学生升序，其他降序
-            }
-            // 使用 ?? '' 保证 localeCompare 操作字符串
-            return (a.name_en ?? a.name_zh ?? "").localeCompare(
-              b.name_en ?? b.name_zh ?? ""
-            );
+          if (yearA !== yearB) {
+            return isStudentA ? yearA - yearB : yearB - yearA; // 学生升序，其他降序
           }
+          // 使用 ?? '' 保证 localeCompare 操作字符串
+          return (a.name_en ?? a.name_zh ?? "").localeCompare(
+            b.name_en ?? b.name_zh ?? ""
+          );
         });
       });
     return sortedGroupedData;
@@ -167,17 +162,26 @@ export async function getAllMembersForManager(): Promise<Member[]> {
       [MemberStatus.OTHER]: 99,
     };
 
-    // Sort the flat list
+    // Sort the flat list - 现在所有成员都按 display_order 排序
     const sortedMemberList = [...members].sort((a, b) => {
       const statusA = a.status || MemberStatus.OTHER;
       const statusB = b.status || MemberStatus.OTHER;
-      const orderA = statusOrderMap[statusA as MemberStatus] || 99;
-      const orderB = statusOrderMap[statusB as MemberStatus] || 99;
+      const statusOrderA = statusOrderMap[statusA as MemberStatus] || 99;
+      const statusOrderB = statusOrderMap[statusB as MemberStatus] || 99;
 
-      if (orderA !== orderB) {
-        return orderA - orderB;
+      // 首先按状态分组排序
+      if (statusOrderA !== statusOrderB) {
+        return statusOrderA - statusOrderB;
       }
 
+      // 同状态内按 display_order 排序
+      const displayOrderA = a.display_order ?? 0;
+      const displayOrderB = b.display_order ?? 0;
+      if (displayOrderA !== displayOrderB) {
+        return displayOrderA - displayOrderB;
+      }
+
+      // 如果 display_order 相同，按原有逻辑作为备用排序
       const yearA = a.enrollment_year ?? Infinity;
       const yearB = b.enrollment_year ?? Infinity;
       const isStudentA =

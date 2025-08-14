@@ -106,33 +106,19 @@ export function BasicInfoSection({
       onToggle={onToggle}
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1">
-        {/* 英文姓名（只读） */}
-        <div className="mb-4">
-          <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-1">
-            English Name
-          </Label>
-          <p className="mt-1 text-gray-900 dark:text-gray-100 min-h-[40px] py-1 px-2 break-words">
-            {initialData.name_en || (
-              <span className="text-gray-400 dark:text-gray-500 italic">
-                Not set
-              </span>
-            )}
-          </p>
-        </div>
+        <EditableTextField
+          label="English Name"
+          fieldName="name_en"
+          initialValue={initialData.name_en}
+          memberId={initialData.id}
+        />
 
-        {/* 中文姓名（只读） */}
-        <div className="mb-4">
-          <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-1">
-            Chinese Name
-          </Label>
-          <p className="mt-1 text-gray-900 dark:text-gray-100 min-h-[40px] py-1 px-2 break-words">
-            {initialData.name_zh || (
-              <span className="text-gray-400 dark:text-gray-500 italic">
-                Not set
-              </span>
-            )}
-          </p>
-        </div>
+        <EditableTextField
+          label="Chinese Name"
+          fieldName="name_zh"
+          initialValue={initialData.name_zh}
+          memberId={initialData.id}
+        />
 
         <EditableTextField
           label="Email"

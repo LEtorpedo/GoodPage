@@ -273,5 +273,149 @@ function isValidHttpUrl(string: string): boolean {
   return url.protocol === "http:" || url.protocol === "https:";
 }
 
+// Interface for updating member display order
+interface UpdateMemberOrderRequestBody {
+  memberIds: string[]; // Array of member IDs in the new order
+}
+
+// Interface for deleting a member
+interface DeleteMemberRequestBody {
+  memberId: string;
+}
+
+// PUT /api/members - Update display order for multiple members
+export async function PUT(request: Request) {
+  console.log("[API PUT Members] Received request to update member order.");
+
+  try {
+    // TODO: Implement Permission Check
+    // const isAdmin = await checkAdminPermission();
+    // if (!isAdmin) {
+    //   return NextResponse.json(
+    //     { success: false, error: 'Permission denied. Admin role required.' },
+    //     { status: 403 }
+    //   );
+    // }
+
+    // Parse Request Body
+    let body: UpdateMemberOrderRequestBody;
+    try {
+      body = await request.json();
+      console.log("[API PUT Members] Request body parsed:", body);
+    } catch (e) {
+      console.error("[API PUT Members] Error parsing request body:", e);
+      return NextResponse.json(
+        { success: false, error: "Invalid request body." },
+        { status: 400 }
+      );
+    }
+
+    const { memberIds } = body;
+
+    // Validate input
+    if (!Array.isArray(memberIds) || memberIds.length === 0) {
+      return NextResponse.json(
+        { success: false, error: "memberIds must be a non-empty array." },
+        { status: 400 }
+      );
+    }
+
+    // Update display_order for each member
+    const updatePromises = memberIds.map((memberId, index) =>
+      prisma.member.update({
+        where: { id: memberId },
+        data: { display_order: index },
+      })
+    );
+
+    await Promise.all(updatePromises);
+
+    console.log("[API PUT Members] Member order updated successfully.");
+    return NextResponse.json({
+      success: true,
+      message: "Member order updated successfully.",
+    });
+  } catch (error) {
+    console.error("[API PUT Members] Error updating member order:", error);
+    const message =
+      error instanceof Error ? error.message : "Internal Server Error";
+    return NextResponse.json(
+      { success: false, error: { code: "MEMBER_ORDER_UPDATE_FAILED", message } },
+      { status: 500 }
+    );
+  }
+}
+
+// DELETE /api/members - Delete a member
+export async function DELETE(request: Request) {
+  console.log("[API DELETE Members] Received request to delete member.");
+
+  try {
+    // TODO: Implement Permission Check
+    // const isAdmin = await checkAdminPermission();
+    // if (!isAdmin) {
+    //   return NextResponse.json(
+    //     { success: false, error: 'Permission denied. Admin role required.' },
+    //     { status: 403 }
+    //   );
+    // }
+
+    // Parse Request Body
+    let body: DeleteMemberRequestBody;
+    try {
+      body = await request.json();
+      console.log("[API DELETE Members] Request body parsed:", body);
+    } catch (e) {
+      console.error("[API DELETE Members] Error parsing request body:", e);
+      return NextResponse.json(
+        { success: false, error: "Invalid request body." },
+        { status: 400 }
+      );
+    }
+
+    const { memberId } = body;
+
+    // Validate input
+    if (!memberId || typeof memberId !== "string") {
+      return NextResponse.json(
+        { success: false, error: "memberId is required and must be a string." },
+        { status: 400 }
+      );
+    }
+
+    // Check if member exists
+    const existingMember = await prisma.member.findUnique({
+      where: { id: memberId },
+      select: { id: true, name_en: true },
+    });
+
+    if (!existingMember) {
+      return NextResponse.json(
+        { success: false, error: "Member not found." },
+        { status: 404 }
+      );
+    }
+
+    // Delete the member (cascade delete will handle related records)
+    await prisma.member.delete({
+      where: { id: memberId },
+    });
+
+    console.log(`[API DELETE Members] Member ${existingMember.name_en} deleted successfully.`);
+    return NextResponse.json({
+      success: true,
+      message: `Member ${existingMember.name_en} deleted successfully.`,
+    });
+  } catch (error) {
+    console.error("[API DELETE Members] Error deleting member:", error);
+    const message =
+      error instanceof Error ? error.message : "Internal Server Error";
+    return NextResponse.json(
+      { success: false, error: { code: "MEMBER_DELETE_FAILED", message } },
+      { status: 500 }
+    );
+  }
+}
+
 // Ensure bcrypt types are installed: npm install bcrypt @types/bcrypt --save-dev
 // Ensure you have a checkAdminPermission function (e.g., in @/lib/auth)
