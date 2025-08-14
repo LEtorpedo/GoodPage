@@ -10,6 +10,10 @@ import {
   Plus,
   X,
   RefreshCw,
+  Info,
+  ExternalLink,
+  Download,
+  Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { themeColors } from "@/styles/theme";
@@ -211,6 +215,17 @@ const YamlImportManager: React.FC = () => {
   };
 
   /**
+   * 格式化文件大小
+   */
+  const formatFileSize = (bytes: number): string => {
+    if (bytes === 0) return "0 Bytes";
+    const k = 1024;
+    const sizes = ["Bytes", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+  };
+
+  /**
    * 重置状态
    */
   const handleReset = () => {
@@ -218,24 +233,29 @@ const YamlImportManager: React.FC = () => {
   };
 
   return (
-    <div
-      className={`space-y-6 ${themeColors.devCardBg} p-6 rounded-lg border border-gray-700`}
-    >
-      {/* 标题 */}
-      <div className="flex items-center gap-3">
-        <Upload className={`${themeColors.devAccent} w-6 h-6`} />
-        <h3 className={`text-xl font-semibold ${themeColors.devText}`}>
+    <div className="space-y-8">
+      {/* 页面标题 */}
+      <div className="text-center">
+        <h2 className={`text-3xl font-bold ${themeColors.devText} mb-2`}>
           Import Publications from YAML
-        </h3>
+        </h2>
+        <div className="flex items-center justify-center gap-2 text-sm text-gray-400">
+          <Upload className="w-4 h-4" />
+          <span>Upload and import publication data from YAML files</span>
+        </div>
       </div>
 
       {/* 文件管理区域 */}
-      <div className="space-y-6">
-        {/* 上传按钮 */}
-        <div className="flex justify-between items-center">
-          <h3 className={`text-lg font-medium ${themeColors.devText}`}>
-            YAML Files Management
-          </h3>
+      <div
+        className={`p-6 rounded-xl ${themeColors.devCardBg} border border-gray-600 bg-gradient-to-br from-blue-900/10 to-indigo-900/10`}
+      >
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <FileText className="w-6 h-6 text-blue-400" />
+            <h3 className={`text-lg font-medium ${themeColors.devText}`}>
+              YAML Files Management
+            </h3>
+          </div>
           <div className="flex gap-3">
             <input
               ref={fileInputRef}
@@ -247,7 +267,7 @@ const YamlImportManager: React.FC = () => {
             <button
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploading}
-              className={`inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
+              className={`inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white ${
                 isUploading
                   ? "bg-gray-600 cursor-not-allowed"
                   : "bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
@@ -268,7 +288,7 @@ const YamlImportManager: React.FC = () => {
             <button
               onClick={loadYamlFiles}
               disabled={isLoadingFiles}
-              className={`inline-flex items-center px-4 py-2 border border-gray-600 rounded-md shadow-sm text-sm font-medium ${themeColors.devText} ${themeColors.devCardBg} hover:bg-gray-700 transition-colors disabled:opacity-50`}
+              className={`inline-flex items-center px-4 py-2 border border-gray-600 rounded-lg shadow-sm text-sm font-medium ${themeColors.devText} ${themeColors.devCardBg} hover:bg-gray-700 transition-colors disabled:opacity-50`}
             >
               {isLoadingFiles ? (
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -281,232 +301,236 @@ const YamlImportManager: React.FC = () => {
         </div>
 
         {/* 文件列表 */}
-        <div
-          className={`overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg ${themeColors.devCardBg}`}
-        >
-          <table className="min-w-full divide-y divide-gray-700">
-            <thead className="bg-gray-800">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                  File Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                  Size
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                  Last Modified
-                </th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-gray-300 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-700">
-              {isLoadingFiles ? (
-                <tr>
-                  <td colSpan={4} className="px-6 py-8 text-center">
-                    <div className="flex items-center justify-center">
-                      <Loader2 className="w-5 h-5 mr-2 animate-spin text-gray-400" />
-                      <span className={`text-sm ${themeColors.devDescText}`}>
-                        Loading files...
-                      </span>
-                    </div>
-                  </td>
-                </tr>
-              ) : yamlFiles.length === 0 ? (
-                <tr>
-                  <td colSpan={4} className="px-6 py-8 text-center">
-                    <span className={`text-sm ${themeColors.devDescText}`}>
-                      No YAML files found. Upload one to get started.
-                    </span>
-                  </td>
-                </tr>
-              ) : (
-                yamlFiles.map((file) => (
-                  <tr key={file.name} className="hover:bg-gray-700/50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <FileText className="w-4 h-4 mr-2 text-blue-400" />
-                        <span className={themeColors.devText}>{file.name}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`text-sm ${themeColors.devDescText}`}>
-                        {(file.size / 1024).toFixed(1)} KB
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`text-sm ${themeColors.devDescText}`}>
-                        {new Date(file.lastModified).toLocaleDateString()}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-center whitespace-nowrap">
-                      <div className="flex items-center justify-center gap-2">
-                        <button
-                          onClick={() => handleImport(file.name)}
-                          disabled={isImporting}
-                          className={`inline-flex items-center px-3 py-1 border border-transparent rounded-md shadow-sm text-xs font-medium text-white ${
-                            isImporting
-                              ? "bg-gray-600 cursor-not-allowed animate-pulse"
-                              : "bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                          } transition-colors disabled:opacity-50`}
-                          title={`Import ${file.name} to pending review`}
-                        >
-                          {isImporting ? (
-                            <>
-                              <Loader2 className="w-3 h-3 mr-1 animate-spin" />
-                              Importing...
-                            </>
-                          ) : (
-                            <>
-                              <Upload className="w-3 h-3 mr-1" />
-                              Import
-                            </>
-                          )}
-                        </button>
-                        <button
-                          onClick={() => handleFileDelete(file.name)}
-                          disabled={deletingFiles.has(file.name)}
-                          className={`inline-flex items-center px-3 py-1 border border-transparent rounded-md shadow-sm text-xs font-medium text-white ${
-                            deletingFiles.has(file.name)
-                              ? "bg-gray-600 cursor-not-allowed animate-pulse"
-                              : "bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                          } transition-colors disabled:opacity-50`}
-                          title={`Delete ${file.name}`}
-                        >
-                          {deletingFiles.has(file.name) ? (
-                            <>
-                              <Loader2 className="w-3 h-3 mr-1 animate-spin" />
-                              Deleting...
-                            </>
-                          ) : (
-                            <>
-                              <X className="w-3 h-3 mr-1" />
-                              Delete
-                            </>
-                          )}
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* 重置按钮 */}
-        {importResult && (
-          <button
-            onClick={handleReset}
-            className={`inline-flex items-center px-4 py-2 border border-gray-600 rounded-md shadow-sm text-sm font-medium ${themeColors.devText} ${themeColors.devCardBg} hover:bg-gray-700 transition-colors`}
-          >
-            Reset Results
-          </button>
-        )}
-      </div>
-
-      {/* 导入结果 */}
-      {importResult && (
-        <div className="space-y-4">
-          <div
-            className={`p-4 rounded-md border ${themeColors.devCardBg} border-green-600`}
-          >
-            <div className="flex items-center gap-2 mb-3">
-              <CheckCircle className="w-5 h-5 text-green-500" />
-              <h4 className={`font-medium ${themeColors.devText}`}>
-                Import Completed
-              </h4>
-            </div>
-
-            <div className={`space-y-2 text-sm ${themeColors.devDescText}`}>
-              <div>📁 File: {importResult.fileName}</div>
-              <div>📊 Total publications in file: {importResult.total}</div>
-              <div>✅ Successfully imported: {importResult.imported}</div>
-              <div>⚠️ Duplicates skipped: {importResult.duplicatesSkipped}</div>
-            </div>
-
-            {importResult.duplicateTitles.length > 0 && (
-              <div className="mt-4">
-                <h5 className={`font-medium ${themeColors.devText} mb-2`}>
-                  Duplicate Titles Skipped:
-                </h5>
-                <div
-                  className={`max-h-32 overflow-y-auto space-y-1 text-xs ${themeColors.devDescText}`}
-                >
-                  {importResult.duplicateTitles.map((title, index) => (
-                    <div key={index} className="truncate">
-                      • {title}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div
-            className={`p-3 rounded-md bg-blue-900/20 border border-blue-600`}
-          >
-            <div className="flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-blue-400" />
-              <span className={`text-sm ${themeColors.devText}`}>
-                Imported publications are now in the <strong>Pending</strong>{" "}
-                section for review.
+        <div className="rounded-lg border border-gray-700 bg-gray-800/50 overflow-hidden">
+          {isLoadingFiles ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="w-6 h-6 animate-spin text-blue-400" />
+              <span className={`ml-2 ${themeColors.devText}`}>
+                Loading files...
               </span>
             </div>
+          ) : yamlFiles.length === 0 ? (
+            <div className="text-center py-16">
+              <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              <p className={`${themeColors.devDescText} mb-2 text-lg`}>
+                No YAML files available
+              </p>
+              <p className={`text-sm ${themeColors.devDescText}`}>
+                Upload a YAML file to get started
+              </p>
+            </div>
+          ) : (
+            <div className="divide-y divide-gray-700">
+              {yamlFiles.map((file, index) => (
+                <div
+                  key={index}
+                  className="p-4 hover:bg-gray-700/30 transition-colors"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <FileText className="w-5 h-5 text-blue-400" />
+                      <div>
+                        <p className={`font-medium ${themeColors.devText}`}>
+                          {file.name}
+                        </p>
+                        <p className={`text-sm ${themeColors.devDescText}`}>
+                          {formatFileSize(file.size)} • {new Date(file.lastModified).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={() => handleImport(file.name)}
+                        disabled={isImporting}
+                        className={`inline-flex items-center px-4 py-2 border border-transparent rounded-lg text-sm font-medium text-white ${
+                          isImporting
+                            ? "bg-gray-600 cursor-not-allowed"
+                            : "bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                        } transition-colors disabled:opacity-50`}
+                      >
+                        {isImporting ? (
+                          <>
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            Importing...
+                          </>
+                        ) : (
+                          <>
+                            <Download className="w-4 h-4 mr-2" />
+                            Import
+                          </>
+                        )}
+                      </button>
+                      <button
+                        onClick={() => handleFileDelete(file.name)}
+                        disabled={deletingFiles.has(file.name)}
+                        className={`inline-flex items-center px-3 py-2 border border-red-600 rounded-lg text-sm font-medium text-red-400 hover:bg-red-600 hover:text-white transition-colors ${
+                          deletingFiles.has(file.name) ? "opacity-50 cursor-not-allowed" : ""
+                        }`}
+                      >
+                        {deletingFiles.has(file.name) ? (
+                          <>
+                            <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                            Deleting...
+                          </>
+                        ) : (
+                          <>
+                            <Trash2 className="w-4 h-4 mr-1" />
+                            Delete
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* 导入结果区域 */}
+      {importResult && (
+        <div
+          className={`p-6 rounded-xl ${themeColors.devCardBg} border border-green-600 bg-gradient-to-br from-green-900/20 to-emerald-900/20`}
+        >
+          <div className="flex items-center gap-3 mb-6">
+            <CheckCircle className="w-8 h-8 text-green-400" />
+            <h3 className={`text-xl font-medium ${themeColors.devText}`}>
+              Import Completed Successfully
+            </h3>
+            <button
+              onClick={handleReset}
+              className={`ml-auto inline-flex items-center px-3 py-1 border border-gray-600 rounded-lg shadow-sm text-sm font-medium ${themeColors.devText} ${themeColors.devCardBg} hover:bg-gray-700 transition-colors`}
+            >
+              <X className="w-4 h-4 mr-1" />
+              Close
+            </button>
+          </div>
+
+          <div className="grid grid-cols-3 gap-4 mb-6">
+            <div className="text-center p-4 rounded-lg bg-green-900/30 border border-green-600/50">
+              <div className="text-2xl font-bold text-green-400 mb-2">
+                {importResult.imported}
+              </div>
+              <div className={`text-xs ${themeColors.devDescText} font-medium`}>
+                Successfully Imported
+              </div>
+            </div>
+            <div className="text-center p-4 rounded-lg bg-yellow-900/30 border border-yellow-600/50">
+              <div className="text-2xl font-bold text-yellow-400 mb-2">
+                {importResult.duplicatesSkipped}
+              </div>
+              <div className={`text-xs ${themeColors.devDescText} font-medium`}>
+                Duplicates Skipped
+              </div>
+            </div>
+            <div className="text-center p-4 rounded-lg bg-blue-900/30 border border-blue-600/50">
+              <div className="text-2xl font-bold text-blue-400 mb-2">
+                {importResult.total}
+              </div>
+              <div className={`text-xs ${themeColors.devDescText} font-medium`}>
+                Total Processed
+              </div>
+            </div>
+          </div>
+
+          {importResult.duplicateTitles && importResult.duplicateTitles.length > 0 && (
+            <div className="mb-4 p-4 bg-yellow-900/30 border border-yellow-600/50 rounded-lg">
+              <p className={`text-sm ${themeColors.devDescText} mb-2 font-medium`}>
+                Skipped duplicate publications:
+              </p>
+              <div className="max-h-24 overflow-y-auto">
+                <ul className={`text-xs ${themeColors.devDescText} space-y-1`}>
+                  {importResult.duplicateTitles.map((title, index) => (
+                    <li key={index} className="truncate">
+                      • {title}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+
+          <div className="p-3 bg-blue-900/30 border border-blue-600/50 rounded-lg">
+            <p className="text-blue-400 text-sm">
+              💡 Imported publications have been added to the "Pending Review" tab where you can review, edit, and publish them.
+            </p>
           </div>
         </div>
       )}
 
-      {/* 使用说明 */}
-      <div className={`p-4 rounded-md bg-gray-800/50 border border-gray-600`}>
-        <h4 className={`font-medium ${themeColors.devText} mb-2`}>
-          Instructions:
-        </h4>
-        <ul className={`text-sm ${themeColors.devDescText} space-y-1`}>
-          <li>
-            • <strong>Upload:</strong> Click "Upload YAML File" to add new YAML
-            files to the system
-          </li>
-          <li>
-            • <strong>Import:</strong> Click "Import" button for any available
-            YAML file to import publications
-          </li>
-          <li>
-            • <strong>Delete:</strong> Click "Delete" button to remove YAML
-            files from the system
-          </li>
-          <li>• Files are stored in the /data/yaml directory on the server</li>
-          <li>• Only .yml and .yaml files are accepted (max 10MB)</li>
-          <li>
-            • The file should have a 'works' array with publication entries
-          </li>
-          <li>• Author information will be automatically parsed and saved</li>
-          <li>
-            • Duplicate titles will be automatically skipped (checks all
-            existing records)
-          </li>
-          <li>
-            • Imported publications will appear in the Pending section for
-            review
-          </li>
-          <li>• You can then approve or edit them before publishing</li>
-          <li>
-            • yml source file comes from{" "}
-            <a
-              href="https://github.com/TheAlbertDev/get-orcid-publications"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`text-blue-400 hover:text-blue-500`}
-            >
-              get-orcid-publications
-            </a>
-          </li>
-          <li>
-            • to update the yml file, please update data, just fork the repo and
-            use the workflow
-          </li>
-        </ul>
+      {/* 使用说明区域 */}
+      <div className={`p-6 rounded-xl bg-gray-800/50 border border-gray-600`}>
+        <div className="flex items-center gap-3 mb-4">
+          <Info className="w-5 h-5 text-blue-400" />
+          <h4 className={`font-medium ${themeColors.devText} text-lg`}>
+            Usage Instructions
+          </h4>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h5 className={`font-medium ${themeColors.devText} mb-3 text-green-400`}>
+              File Management:
+            </h5>
+            <ul className={`text-sm ${themeColors.devDescText} space-y-2`}>
+              <li className="flex items-start gap-2">
+                <span className="text-blue-400 mt-0.5">•</span>
+                <span><strong>Upload:</strong> Click "Upload YAML File" to add new YAML files to the system</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-blue-400 mt-0.5">•</span>
+                <span><strong>Import:</strong> Click "Import" button for any available YAML file to import publications</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-blue-400 mt-0.5">•</span>
+                <span><strong>Delete:</strong> Click "Delete" button to remove YAML files from the system</span>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h5 className={`font-medium ${themeColors.devText} mb-3 text-orange-400`}>
+              File Requirements:
+            </h5>
+            <ul className={`text-sm ${themeColors.devDescText} space-y-2`}>
+              <li className="flex items-start gap-2">
+                <span className="text-blue-400 mt-0.5">•</span>
+                <span>Only .yml and .yaml files are accepted (max 10MB)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-blue-400 mt-0.5">•</span>
+                <span>The file should have a 'works' array with publication entries</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-blue-400 mt-0.5">•</span>
+                <span>Files are stored in the /data/yaml directory on the server</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div className="mt-6 pt-4 border-t border-gray-600">
+          <div className="flex items-start gap-3 p-4 bg-blue-900/20 border border-blue-600/50 rounded-lg">
+            <ExternalLink className="w-5 h-5 text-blue-400 mt-0.5" />
+            <div>
+              <p className={`text-sm ${themeColors.devText} font-medium mb-1`}>
+                YAML Source Information:
+              </p>
+              <p className={`text-xs ${themeColors.devDescText} mb-2`}>
+                YAML source files come from{" "}
+                <a
+                  href="https://github.com/TheAlbertDev/get-orcid-publications"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-400 hover:text-blue-300 underline"
+                >
+                  get-orcid-publications
+                </a>
+              </p>
+              <p className={`text-xs ${themeColors.devDescText}`}>
+                To update the YAML file, please fork the repository and use the workflow to generate new data.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

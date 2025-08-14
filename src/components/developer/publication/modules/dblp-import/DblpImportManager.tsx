@@ -12,6 +12,8 @@ import {
   Trash2,
   FileText,
   Play,
+  Info,
+  AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 import ProfessorsConfig from "./ProfessorsConfig";
@@ -278,8 +280,7 @@ const DblpImportManager: React.FC = () => {
               </h3>
             </div>
             <p className={`text-sm ${themeColors.devDescText} mb-4`}>
-              Run the DBLP crawler to automatically fetch publications for
-              configured professors
+              Run the DBLP crawler to automatically fetch publications for configured professors
             </p>
             <button
               onClick={handleRunCrawler}
@@ -302,6 +303,13 @@ const DblpImportManager: React.FC = () => {
                 </>
               )}
             </button>
+            
+            {/* 提示信息 */}
+            <div className="mt-4 p-3 bg-cyan-900/20 border border-cyan-600/50 rounded-lg">
+              <p className="text-cyan-400 text-xs">
+                💡 The crawler will fetch publications from DBLP database based on configured professor names and generate output files for import.
+              </p>
+            </div>
           </div>
         </div>
 
@@ -329,7 +337,7 @@ const DblpImportManager: React.FC = () => {
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploading}
-                  className={`inline-flex items-center px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
+                  className={`inline-flex items-center px-3 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white ${
                     isUploading
                       ? "bg-gray-600 cursor-not-allowed"
                       : "bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
@@ -350,7 +358,7 @@ const DblpImportManager: React.FC = () => {
                 <button
                   onClick={loadDblpFiles}
                   disabled={isLoadingFiles}
-                  className={`inline-flex items-center px-3 py-2 border border-gray-600 rounded-md shadow-sm text-sm font-medium ${themeColors.devText} ${themeColors.devCardBg} hover:bg-gray-700 transition-colors disabled:opacity-50`}
+                  className={`inline-flex items-center px-3 py-2 border border-gray-600 rounded-lg shadow-sm text-sm font-medium ${themeColors.devText} ${themeColors.devCardBg} hover:bg-gray-700 transition-colors disabled:opacity-50`}
                 >
                   {isLoadingFiles ? (
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -521,58 +529,64 @@ const DblpImportManager: React.FC = () => {
 
       {/* 使用说明区域 */}
       <div className={`p-6 rounded-xl bg-gray-800/50 border border-gray-600`}>
-        <h4 className={`font-medium ${themeColors.devText} mb-4 text-lg`}>
-          Usage Instructions:
-        </h4>
+        <div className="flex items-center gap-3 mb-4">
+          <Info className="w-5 h-5 text-blue-400" />
+          <h4 className={`font-medium ${themeColors.devText} text-lg`}>
+            Usage Instructions
+          </h4>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <h5
-              className={`font-medium ${themeColors.devText} mb-2 text-green-400`}
-            >
+            <h5 className={`font-medium ${themeColors.devText} mb-3 text-green-400`}>
               Automated Workflow:
             </h5>
-            <ul className={`text-sm ${themeColors.devDescText} space-y-1`}>
-              <li>
-                • <strong>Configure:</strong> Set up professor names in the
-                configuration panel
+            <ul className={`text-sm ${themeColors.devDescText} space-y-2`}>
+              <li className="flex items-start gap-2">
+                <span className="text-blue-400 mt-0.5">•</span>
+                <span><strong>Configure:</strong> Set up professor names in the configuration panel</span>
               </li>
-              <li>
-                • <strong>Run Crawler:</strong> Click "Run DBLP Crawler" to
-                fetch latest publications
+              <li className="flex items-start gap-2">
+                <span className="text-blue-400 mt-0.5">•</span>
+                <span><strong>Run Crawler:</strong> Click "Run DBLP Crawler" to fetch latest publications</span>
               </li>
-              <li>
-                • <strong>Import:</strong> Click "Import" on the generated file
-                to add publications
+              <li className="flex items-start gap-2">
+                <span className="text-blue-400 mt-0.5">•</span>
+                <span><strong>Import:</strong> Click "Import" on the generated file to add publications</span>
               </li>
             </ul>
           </div>
           <div>
-            <h5
-              className={`font-medium ${themeColors.devText} mb-2 text-blue-400`}
-            >
+            <h5 className={`font-medium ${themeColors.devText} mb-3 text-cyan-400`}>
               Manual Workflow:
             </h5>
-            <ul className={`text-sm ${themeColors.devDescText} space-y-1`}>
-              <li>
-                • <strong>Upload:</strong> Upload manually generated .txt files
-                (max 10MB)
+            <ul className={`text-sm ${themeColors.devDescText} space-y-2`}>
+              <li className="flex items-start gap-2">
+                <span className="text-blue-400 mt-0.5">•</span>
+                <span><strong>Upload:</strong> Upload manually generated .txt files (max 10MB)</span>
               </li>
-              <li>
-                • <strong>Import:</strong> Process uploaded files to add
-                publications
+              <li className="flex items-start gap-2">
+                <span className="text-blue-400 mt-0.5">•</span>
+                <span><strong>Import:</strong> Process uploaded files to add publications</span>
               </li>
-              <li>
-                • <strong>Manage:</strong> Delete unnecessary files from the
-                system
+              <li className="flex items-start gap-2">
+                <span className="text-blue-400 mt-0.5">•</span>
+                <span><strong>Manage:</strong> Delete unnecessary files from the system</span>
               </li>
             </ul>
           </div>
         </div>
-        <div className="mt-4 pt-4 border-t border-gray-600">
-          <p className={`text-xs ${themeColors.devDescText}`}>
-            <strong>Note:</strong> System automatically detects duplicates and
-            imports publications to "Pending Review" for final approval.
-          </p>
+        <div className="mt-6 pt-4 border-t border-gray-600">
+          <div className="flex items-start gap-3 p-4 bg-blue-900/20 border border-blue-600/50 rounded-lg">
+            <AlertCircle className="w-5 h-5 text-blue-400 mt-0.5" />
+            <div>
+              <p className={`text-sm ${themeColors.devText} font-medium mb-1`}>
+                System Information:
+              </p>
+              <p className={`text-xs ${themeColors.devDescText}`}>
+                System automatically detects duplicates and imports publications to "Pending Review" for final approval.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
