@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Lock,
@@ -28,6 +28,7 @@ import { PhotoManager as PhotoManager } from "./photo";
 import MemberManager from "./user/MemberManager";
 import UserManager from "./user/UserManager";
 import { useAuthStore } from "@/store/authStore";
+import { usePermissions } from "@/hooks/usePermissions";
 
 // Define the structure for a tool configuration object
 interface ToolConfig {
@@ -66,6 +67,7 @@ const availableTools: ToolConfig[] = [
     title: "Manage Members",
     description: "View and manage lab member information.", // Updated description
     icon: Users,
+    requiredPermission: "manage_members", // 添加权限要求
     component: MemberManager, // The component rendered is the list manager
     buttonText: "Manage Members",
   },
@@ -115,7 +117,8 @@ interface DeveloperDashboardProps {
 const DeveloperDashboard: React.FC<DeveloperDashboardProps> = ({
   onLogout,
 }) => {
-  const { permissions, isFullAccess } = useAuthStore();
+  const { isFullAccess } = useAuthStore();
+  const { hasPermission } = usePermissions();
 
   const [activeTool, setActiveTool] = useState<string | null>(null);
   const [isHomepageEditorOpen, setIsHomepageEditorOpen] = useState(false); // State for modal
@@ -139,16 +142,6 @@ const DeveloperDashboard: React.FC<DeveloperDashboardProps> = ({
 
   // --- REMOVED handleEditMemberRequest ---
   // --- REMOVED handleCloseMemberEditor ---
-
-  // Helper to check permissions
-  const hasPermission = useCallback(
-    (perm?: string) => {
-      if (!perm) return true; // Tools without requiredPermission are always allowed
-      // Assuming isFullAccess is true for Admin/Root
-      return isFullAccess || (permissions || []).includes(perm);
-    },
-    [permissions, isFullAccess]
-  );
 
   // Find the configuration for the currently active tool
   const currentToolConfig = activeTool
@@ -227,7 +220,7 @@ const DeveloperDashboard: React.FC<DeveloperDashboardProps> = ({
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
         >
           {/* Render ALL available tools, disabling based on permission */}
-          {availableTools.map((tool, index) => {
+          {availableTools.map((tool) => {
             const canAccessTool = hasPermission(tool.requiredPermission);
             const isDisabled = !canAccessTool;
 
