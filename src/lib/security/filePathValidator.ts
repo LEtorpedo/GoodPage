@@ -27,9 +27,18 @@ export interface ValidationResult {
   /** 规范化的文件名 */
   normalizedFilename?: string;
   /** 错误类型分类 */
-  errorType?: 'PATH_TRAVERSAL' | 'INVALID_EXTENSION' | 'DANGEROUS_CHARS' | 'RESERVED_NAME' | 'SYSTEM_FILE' | 'SHELL_INJECTION' | 'UNICODE_ATTACK' | 'LENGTH_LIMIT' | 'PLATFORM_SPECIFIC';
+  errorType?:
+    | "PATH_TRAVERSAL"
+    | "INVALID_EXTENSION"
+    | "DANGEROUS_CHARS"
+    | "RESERVED_NAME"
+    | "SYSTEM_FILE"
+    | "SHELL_INJECTION"
+    | "UNICODE_ATTACK"
+    | "LENGTH_LIMIT"
+    | "PLATFORM_SPECIFIC";
   /** 风险等级 */
-  riskLevel?: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  riskLevel?: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
 }
 
 // 验证结果缓存（提高性能）
@@ -89,7 +98,7 @@ function setCachedResult(cacheKey: string, result: ValidationResult): void {
 
   validationCache.set(cacheKey, {
     result,
-    timestamp: Date.now()
+    timestamp: Date.now(),
   });
 }
 
@@ -118,8 +127,8 @@ export function validateFilePath(
       const result: ValidationResult = {
         isValid: false,
         error: "文件名不能为空",
-        errorType: 'DANGEROUS_CHARS',
-        riskLevel: 'HIGH'
+        errorType: "DANGEROUS_CHARS",
+        riskLevel: "HIGH",
       };
       setCachedResult(cacheKey, result);
       return result;
@@ -131,8 +140,8 @@ export function validateFilePath(
       const result: ValidationResult = {
         isValid: false,
         error: `文件名长度不能超过 ${maxLength} 个字符（当前: ${filename.length} 字符）`,
-        errorType: 'LENGTH_LIMIT',
-        riskLevel: filename.length > 200 ? 'HIGH' : 'MEDIUM' // 超过200字符视为高风险
+        errorType: "LENGTH_LIMIT",
+        riskLevel: filename.length > 200 ? "HIGH" : "MEDIUM", // 超过200字符视为高风险
       };
       setCachedResult(cacheKey, result);
       return result;
@@ -143,8 +152,8 @@ export function validateFilePath(
       const result: ValidationResult = {
         isValid: false,
         error: "文件名过短，至少需要3个字符",
-        errorType: 'LENGTH_LIMIT',
-        riskLevel: 'MEDIUM'
+        errorType: "LENGTH_LIMIT",
+        riskLevel: "MEDIUM",
       };
       setCachedResult(cacheKey, result);
       return result;
@@ -152,14 +161,14 @@ export function validateFilePath(
 
     // 3. 检查危险字符和路径遍历模式
     const dangerousPatterns = [
-      /\.\./,           // 路径遍历 (..)
-      /[<>:"|?*]/,      // Windows 保留字符
-      /[\x00-\x1f]/,    // 控制字符
-      /^\.+$/,          // 只包含点号的文件名
-      /\/$|\\$/,        // 以路径分隔符结尾
-      /;|&|\||`|\$|\(|\)/,  // Linux shell 特殊字符
-      /\s+$/,           // 以空白字符结尾
-      /^\s+/,           // 以空白字符开头
+      /\.\./, // 路径遍历 (..)
+      /[<>:"|?*]/, // Windows 保留字符
+      /[\x00-\x1f]/, // 控制字符
+      /^\.+$/, // 只包含点号的文件名
+      /\/$|\\$/, // 以路径分隔符结尾
+      /;|&|\||`|\$|\(|\)/, // Linux shell 特殊字符
+      /\s+$/, // 以空白字符结尾
+      /^\s+/, // 以空白字符开头
     ];
 
     for (let i = 0; i < dangerousPatterns.length; i++) {
@@ -168,8 +177,8 @@ export function validateFilePath(
         const result: ValidationResult = {
           isValid: false,
           error: "文件名包含非法字符或路径遍历模式",
-          errorType: i === 0 ? 'PATH_TRAVERSAL' : 'DANGEROUS_CHARS', // 第一个是路径遍历模式
-          riskLevel: 'CRITICAL'
+          errorType: i === 0 ? "PATH_TRAVERSAL" : "DANGEROUS_CHARS", // 第一个是路径遍历模式
+          riskLevel: "CRITICAL",
         };
         setCachedResult(cacheKey, result);
         return result;
@@ -182,8 +191,8 @@ export function validateFilePath(
         const result: ValidationResult = {
           isValid: false,
           error: "文件名不能包含路径分隔符",
-          errorType: 'PATH_TRAVERSAL',
-          riskLevel: 'HIGH'
+          errorType: "PATH_TRAVERSAL",
+          riskLevel: "HIGH",
         };
         setCachedResult(cacheKey, result);
         return result;
@@ -191,16 +200,18 @@ export function validateFilePath(
     }
 
     // 5. 规范化文件名
-    const normalizedFilename = path.normalize(filename).replace(/^(\.\.[\/\\])+/, "");
-    
+    const normalizedFilename = path
+      .normalize(filename)
+      .replace(/^(\.\.[\/\\])+/, "");
+
     // 6. 验证文件扩展名
     const fileExtension = path.extname(normalizedFilename).toLowerCase();
     if (!options.allowedExtensions.includes(fileExtension)) {
       const result: ValidationResult = {
         isValid: false,
         error: `不支持的文件类型。允许的扩展名: ${options.allowedExtensions.join(", ")}`,
-        errorType: 'INVALID_EXTENSION',
-        riskLevel: 'MEDIUM'
+        errorType: "INVALID_EXTENSION",
+        riskLevel: "MEDIUM",
       };
       setCachedResult(cacheKey, result);
       return result;
@@ -208,15 +219,18 @@ export function validateFilePath(
 
     // 7. 构建安全的完整路径
     const safePath = path.resolve(options.baseDirectory, normalizedFilename);
-    
+
     // 8. 确保解析后的路径仍在基础目录内（防止符号链接攻击）
     const resolvedBaseDir = path.resolve(options.baseDirectory);
-    if (!safePath.startsWith(resolvedBaseDir + path.sep) && safePath !== resolvedBaseDir) {
+    if (
+      !safePath.startsWith(resolvedBaseDir + path.sep) &&
+      safePath !== resolvedBaseDir
+    ) {
       const result: ValidationResult = {
         isValid: false,
         error: "文件路径超出允许的目录范围",
-        errorType: 'PATH_TRAVERSAL',
-        riskLevel: 'CRITICAL'
+        errorType: "PATH_TRAVERSAL",
+        riskLevel: "CRITICAL",
       };
       setCachedResult(cacheKey, result);
       return result;
@@ -228,22 +242,53 @@ export function validateFilePath(
 
     // Windows 保留设备名（不区分大小写）
     const windowsReservedDevices = new Set([
-      "CON", "PRN", "AUX", "NUL",
-      "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
-      "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"
+      "CON",
+      "PRN",
+      "AUX",
+      "NUL",
+      "COM1",
+      "COM2",
+      "COM3",
+      "COM4",
+      "COM5",
+      "COM6",
+      "COM7",
+      "COM8",
+      "COM9",
+      "LPT1",
+      "LPT2",
+      "LPT3",
+      "LPT4",
+      "LPT5",
+      "LPT6",
+      "LPT7",
+      "LPT8",
+      "LPT9",
     ]);
 
     // Linux/Unix 系统敏感文件名（区分大小写）
     const unixSensitiveFiles = new Set([
-      "passwd", "shadow", "group", "gshadow", "hosts", "fstab", "sudoers",
-      "crontab", "profile", "bashrc", "bash_profile", "authorized_keys",
-      "id_rsa", "id_dsa", "id_ecdsa", "id_ed25519", "known_hosts"
+      "passwd",
+      "shadow",
+      "group",
+      "gshadow",
+      "hosts",
+      "fstab",
+      "sudoers",
+      "crontab",
+      "profile",
+      "bashrc",
+      "bash_profile",
+      "authorized_keys",
+      "id_rsa",
+      "id_dsa",
+      "id_ecdsa",
+      "id_ed25519",
+      "known_hosts",
     ]);
 
     // 特殊目录名和文件名
-    const specialNames = new Set([
-      ".", "..", "~", "$", "#"
-    ]);
+    const specialNames = new Set([".", "..", "~", "$", "#"]);
 
     // 检查 Windows 保留设备名
     if (windowsReservedDevices.has(baseFilenameUpper)) {
@@ -271,16 +316,16 @@ export function validateFilePath(
 
     // 检查是否以系统敏感前缀开头
     const sensitivePatterns = [
-      /^\.ssh/i,        // SSH 配置目录
-      /^\.gnupg/i,      // GPG 配置目录
-      /^\.aws/i,        // AWS 配置目录
-      /^\.docker/i,     // Docker 配置目录
-      /^\.kube/i,       // Kubernetes 配置目录
-      /^config\./i,     // 配置文件
-      /^secret/i,       // 密钥文件
-      /^private/i,      // 私有文件
-      /^backup/i,       // 备份文件
-      /^dump/i,         // 转储文件
+      /^\.ssh/i, // SSH 配置目录
+      /^\.gnupg/i, // GPG 配置目录
+      /^\.aws/i, // AWS 配置目录
+      /^\.docker/i, // Docker 配置目录
+      /^\.kube/i, // Kubernetes 配置目录
+      /^config\./i, // 配置文件
+      /^secret/i, // 密钥文件
+      /^private/i, // 私有文件
+      /^backup/i, // 备份文件
+      /^dump/i, // 转储文件
     ];
 
     for (const pattern of sensitivePatterns) {
@@ -293,11 +338,14 @@ export function validateFilePath(
     }
 
     // 10. 平台特定检查
-    if (process.platform === 'linux' || process.platform === 'darwin') {
+    if (process.platform === "linux" || process.platform === "darwin") {
       // Unix/Linux 特定检查
 
       // 阻止创建隐藏文件（以点开头，但不是 . 或 ..）
-      if (normalizedFilename.startsWith('.') && !specialNames.has(normalizedFilename)) {
+      if (
+        normalizedFilename.startsWith(".") &&
+        !specialNames.has(normalizedFilename)
+      ) {
         return {
           isValid: false,
           error: "不允许创建隐藏文件或以点开头的文件",
@@ -315,9 +363,23 @@ export function validateFilePath(
 
       // 检查文件权限相关的敏感名称
       const permissionSensitivePatterns = [
-        /sudo/i, /root/i, /admin/i, /wheel/i, /staff/i,
-        /daemon/i, /sys/i, /bin/i, /sbin/i, /usr/i, /var/i,
-        /etc/i, /proc/i, /dev/i, /tmp/i, /opt/i, /mnt/i
+        /sudo/i,
+        /root/i,
+        /admin/i,
+        /wheel/i,
+        /staff/i,
+        /daemon/i,
+        /sys/i,
+        /bin/i,
+        /sbin/i,
+        /usr/i,
+        /var/i,
+        /etc/i,
+        /proc/i,
+        /dev/i,
+        /tmp/i,
+        /opt/i,
+        /mnt/i,
       ];
 
       for (const pattern of permissionSensitivePatterns) {
@@ -328,7 +390,7 @@ export function validateFilePath(
           };
         }
       }
-    } else if (process.platform === 'win32') {
+    } else if (process.platform === "win32") {
       // Windows 特定检查
 
       // 检查 Windows 特殊字符（更严格）
@@ -341,7 +403,10 @@ export function validateFilePath(
       }
 
       // 检查是否以空格或点结尾（Windows 不允许）
-      if (normalizedFilename.endsWith(' ') || normalizedFilename.endsWith('.')) {
+      if (
+        normalizedFilename.endsWith(" ") ||
+        normalizedFilename.endsWith(".")
+      ) {
         return {
           isValid: false,
           error: "Windows 系统不允许文件名以空格或点结尾",
@@ -353,18 +418,17 @@ export function validateFilePath(
       isValid: true,
       safePath,
       normalizedFilename,
-      riskLevel: 'LOW'
+      riskLevel: "LOW",
     };
 
     setCachedResult(cacheKey, result);
     return result;
-
   } catch (error) {
     const result: ValidationResult = {
       isValid: false,
       error: `文件路径验证失败: ${error instanceof Error ? error.message : "未知错误"}`,
-      errorType: 'DANGEROUS_CHARS',
-      riskLevel: 'HIGH'
+      errorType: "DANGEROUS_CHARS",
+      riskLevel: "HIGH",
     };
     setCachedResult(cacheKey, result);
     return result;
@@ -377,16 +441,22 @@ export function validateFilePath(
  * @param baseDirectory 基础目录
  * @returns 文件是否存在
  */
-export function safeFileExists(filePath: string, baseDirectory: string): boolean {
+export function safeFileExists(
+  filePath: string,
+  baseDirectory: string
+): boolean {
   try {
     const resolvedPath = path.resolve(filePath);
     const resolvedBaseDir = path.resolve(baseDirectory);
-    
+
     // 确保文件路径在基础目录内
-    if (!resolvedPath.startsWith(resolvedBaseDir + path.sep) && resolvedPath !== resolvedBaseDir) {
+    if (
+      !resolvedPath.startsWith(resolvedBaseDir + path.sep) &&
+      resolvedPath !== resolvedBaseDir
+    ) {
       return false;
     }
-    
+
     return fs.existsSync(resolvedPath);
   } catch {
     return false;
@@ -401,23 +471,26 @@ export function safeFileExists(filePath: string, baseDirectory: string): boolean
  * @returns 文件内容或 null
  */
 export function safeReadFile(
-  filePath: string, 
-  baseDirectory: string, 
+  filePath: string,
+  baseDirectory: string,
   encoding: BufferEncoding = "utf8"
 ): string | null {
   try {
     const resolvedPath = path.resolve(filePath);
     const resolvedBaseDir = path.resolve(baseDirectory);
-    
+
     // 确保文件路径在基础目录内
-    if (!resolvedPath.startsWith(resolvedBaseDir + path.sep) && resolvedPath !== resolvedBaseDir) {
+    if (
+      !resolvedPath.startsWith(resolvedBaseDir + path.sep) &&
+      resolvedPath !== resolvedBaseDir
+    ) {
       return null;
     }
-    
+
     if (!fs.existsSync(resolvedPath)) {
       return null;
     }
-    
+
     return fs.readFileSync(resolvedPath, encoding);
   } catch {
     return null;
@@ -428,24 +501,26 @@ export function safeReadFile(
  * 为 DBLP 文件验证创建预配置的验证器
  */
 export function createDblpFileValidator(baseDirectory: string) {
-  return (filename: string) => validateFilePath(filename, {
-    allowedExtensions: ['.txt'],
-    baseDirectory,
-    maxFilenameLength: 30, // DBLP 文件名通常较短，30字符足够
-    allowSubdirectories: false,
-  });
+  return (filename: string) =>
+    validateFilePath(filename, {
+      allowedExtensions: [".txt"],
+      baseDirectory,
+      maxFilenameLength: 30, // DBLP 文件名通常较短，30字符足够
+      allowSubdirectories: false,
+    });
 }
 
 /**
  * 为 YAML 文件验证创建预配置的验证器
  */
 export function createYamlFileValidator(baseDirectory: string) {
-  return (filename: string) => validateFilePath(filename, {
-    allowedExtensions: ['.yml', '.yaml'],
-    baseDirectory,
-    maxFilenameLength: 30, // YAML 配置文件名通常较短，30字符足够
-    allowSubdirectories: false,
-  });
+  return (filename: string) =>
+    validateFilePath(filename, {
+      allowedExtensions: [".yml", ".yaml"],
+      baseDirectory,
+      maxFilenameLength: 30, // YAML 配置文件名通常较短，30字符足够
+      allowSubdirectories: false,
+    });
 }
 
 /**
@@ -453,7 +528,10 @@ export function createYamlFileValidator(baseDirectory: string) {
  * @param filename 文件名
  * @returns 是否通过安全检查
  */
-export function linuxSecurityCheck(filename: string): { isValid: boolean; error?: string } {
+export function linuxSecurityCheck(filename: string): {
+  isValid: boolean;
+  error?: string;
+} {
   // 1. Shell 元字符检查（更全面）
   const shellMetaChars = /[;&|`$(){}[\]<>'"\\*?~#!]/;
   if (shellMetaChars.test(filename)) {
@@ -467,7 +545,7 @@ export function linuxSecurityCheck(filename: string): { isValid: boolean; error?
   const systemPathPatterns = [
     /^(dev|proc|sys|tmp|var|etc|usr|bin|sbin|lib|lib64|opt|mnt|media|run|boot)\//i,
     /^\/?(dev|proc|sys|tmp|var|etc|usr|bin|sbin|lib|lib64|opt|mnt|media|run|boot)\//i,
-    /\/(dev|proc|sys|tmp|var|etc|usr|bin|sbin|lib|lib64|opt|mnt|media|run|boot)\//i
+    /\/(dev|proc|sys|tmp|var|etc|usr|bin|sbin|lib|lib64|opt|mnt|media|run|boot)\//i,
   ];
 
   for (const pattern of systemPathPatterns) {
@@ -480,7 +558,8 @@ export function linuxSecurityCheck(filename: string): { isValid: boolean; error?
   }
 
   // 3. Unicode 控制字符和零宽字符检查
-  const dangerousUnicodeChars = /[\u0000-\u001F\u007F-\u009F\u200B-\u200F\u2028-\u202F\u2060-\u206F\uFEFF]/;
+  const dangerousUnicodeChars =
+    /[\u0000-\u001F\u007F-\u009F\u200B-\u200F\u2028-\u202F\u2060-\u206F\uFEFF]/;
   if (dangerousUnicodeChars.test(filename)) {
     return {
       isValid: false,
@@ -490,14 +569,35 @@ export function linuxSecurityCheck(filename: string): { isValid: boolean; error?
 
   // 4. 系统配置文件名相似性检查（使用 Set 提高性能）
   const systemFileNames = new Set([
-    'passwd', 'shadow', 'group', 'gshadow', 'hosts', 'fstab', 'sudoers',
-    'crontab', 'profile', 'bashrc', 'bash_profile', 'zshrc', 'vimrc',
-    'authorized_keys', 'known_hosts', 'ssh_config', 'sshd_config',
-    'resolv.conf', 'nsswitch.conf', 'pam.conf', 'login.defs',
-    'motd', 'issue', 'hostname', 'timezone', 'locale.conf'
+    "passwd",
+    "shadow",
+    "group",
+    "gshadow",
+    "hosts",
+    "fstab",
+    "sudoers",
+    "crontab",
+    "profile",
+    "bashrc",
+    "bash_profile",
+    "zshrc",
+    "vimrc",
+    "authorized_keys",
+    "known_hosts",
+    "ssh_config",
+    "sshd_config",
+    "resolv.conf",
+    "nsswitch.conf",
+    "pam.conf",
+    "login.defs",
+    "motd",
+    "issue",
+    "hostname",
+    "timezone",
+    "locale.conf",
   ]);
 
-  const baseFilename = filename.split('.')[0].toLowerCase();
+  const baseFilename = filename.split(".")[0].toLowerCase();
   if (systemFileNames.has(baseFilename)) {
     return {
       isValid: false,
@@ -509,7 +609,7 @@ export function linuxSecurityCheck(filename: string): { isValid: boolean; error?
   const servicePatterns = [
     /^(apache|nginx|mysql|postgresql|redis|mongodb|docker|kubernetes|systemd)/i,
     /^(ssh|ftp|smtp|http|https|dns|dhcp|nfs|samba|cron|rsyslog)/i,
-    /(service|daemon|server|client|admin|root|sudo)$/i
+    /(service|daemon|server|client|admin|root|sudo)$/i,
   ];
 
   for (const pattern of servicePatterns) {
@@ -534,7 +634,7 @@ export function linuxSecurityCheck(filename: string): { isValid: boolean; error?
   const scriptPatterns = [
     /\.(sh|bash|zsh|csh|ksh|fish)$/i,
     /^(run|exec|start|stop|restart|reload)/i,
-    /\|\s*(sh|bash|zsh|csh|ksh|fish|python|perl|ruby|node)/i
+    /\|\s*(sh|bash|zsh|csh|ksh|fish|python|perl|ruby|node)/i,
   ];
 
   for (const pattern of scriptPatterns) {
@@ -563,7 +663,7 @@ export function validateFilePathEnhanced(
   }
 
   // 在 Linux 环境下进行额外的安全检查
-  if (process.platform === 'linux' || process.platform === 'darwin') {
+  if (process.platform === "linux" || process.platform === "darwin") {
     const linuxCheck = linuxSecurityCheck(filename);
     if (!linuxCheck.isValid) {
       return {

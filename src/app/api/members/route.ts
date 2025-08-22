@@ -340,7 +340,10 @@ export async function PUT(request: Request) {
     const message =
       error instanceof Error ? error.message : "Internal Server Error";
     return NextResponse.json(
-      { success: false, error: { code: "MEMBER_ORDER_UPDATE_FAILED", message } },
+      {
+        success: false,
+        error: { code: "MEMBER_ORDER_UPDATE_FAILED", message },
+      },
       { status: 500 }
     );
   }
@@ -401,7 +404,9 @@ export async function DELETE(request: Request) {
       where: { id: memberId },
     });
 
-    console.log(`[API DELETE Members] Member ${existingMember.name_en} deleted successfully.`);
+    console.log(
+      `[API DELETE Members] Member ${existingMember.name_en} deleted successfully.`
+    );
     return NextResponse.json({
       success: true,
       message: `Member ${existingMember.name_en} deleted successfully.`,

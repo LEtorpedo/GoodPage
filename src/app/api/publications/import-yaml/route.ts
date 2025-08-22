@@ -4,7 +4,7 @@ import path from "path";
 import {
   validateFilePathEnhanced,
   safeReadFile,
-  safeFileExists
+  safeFileExists,
 } from "@/lib/security/filePathValidator";
 
 const prisma = new PrismaClient();
@@ -14,7 +14,7 @@ const YAML_DIR = path.join(process.cwd(), "data", "yaml");
 
 // YAML 文件验证选项
 const yamlValidationOptions = {
-  allowedExtensions: ['.yml', '.yaml'],
+  allowedExtensions: [".yml", ".yaml"],
   baseDirectory: YAML_DIR,
   maxFilenameLength: 30, // 更安全的文件名长度限制
   allowSubdirectories: false,
@@ -267,14 +267,14 @@ export async function POST(request: Request) {
     const { fileName } = body;
 
     if (!fileName) {
-      return NextResponse.json(
-        { error: "文件名是必需的" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "文件名是必需的" }, { status: 400 });
     }
 
     // 安全验证文件路径（使用增强验证，包含 Linux 特定检查）
-    const validation = validateFilePathEnhanced(fileName, yamlValidationOptions);
+    const validation = validateFilePathEnhanced(
+      fileName,
+      yamlValidationOptions
+    );
     if (!validation.isValid) {
       return NextResponse.json(
         { error: `无效的文件名: ${validation.error}` },
@@ -287,19 +287,13 @@ export async function POST(request: Request) {
 
     // 安全检查文件是否存在
     if (!safeFileExists(safePath, YAML_DIR)) {
-      return NextResponse.json(
-        { error: "文件未找到" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "文件未找到" }, { status: 404 });
     }
 
     // 安全读取文件内容
     const yamlContent = safeReadFile(safePath, YAML_DIR);
     if (yamlContent === null) {
-      return NextResponse.json(
-        { error: "无法读取文件" },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "无法读取文件" }, { status: 500 });
     }
 
     // 解析 YAML

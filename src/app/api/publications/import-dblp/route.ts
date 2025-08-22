@@ -4,7 +4,7 @@ import path from "path";
 import {
   validateFilePathEnhanced,
   safeReadFile,
-  safeFileExists
+  safeFileExists,
 } from "@/lib/security/filePathValidator";
 
 const prisma = new PrismaClient();
@@ -12,7 +12,7 @@ const DBLP_DIR = path.join(process.cwd(), "data", "dblp");
 
 // DBLP 文件验证选项
 const dblpValidationOptions = {
-  allowedExtensions: ['.txt'],
+  allowedExtensions: [".txt"],
   baseDirectory: DBLP_DIR,
   maxFilenameLength: 30, // 更安全的文件名长度限制
   allowSubdirectories: false,
@@ -232,7 +232,10 @@ export async function POST(request: NextRequest) {
     }
 
     // 安全验证文件路径（使用增强验证，包含 Linux 特定检查）
-    const validation = validateFilePathEnhanced(fileName, dblpValidationOptions);
+    const validation = validateFilePathEnhanced(
+      fileName,
+      dblpValidationOptions
+    );
     if (!validation.isValid) {
       return NextResponse.json(
         { error: `无效的文件名: ${validation.error}` },
@@ -245,19 +248,13 @@ export async function POST(request: NextRequest) {
 
     // 安全检查文件是否存在
     if (!safeFileExists(safePath, DBLP_DIR)) {
-      return NextResponse.json(
-        { error: "文件未找到" },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "文件未找到" }, { status: 404 });
     }
 
     // 安全读取文件内容
     const fileContent = safeReadFile(safePath, DBLP_DIR);
     if (fileContent === null) {
-      return NextResponse.json(
-        { error: "无法读取文件" },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "无法读取文件" }, { status: 500 });
     }
 
     // 解析 DBLP 文件

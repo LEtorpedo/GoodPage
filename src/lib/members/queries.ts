@@ -106,12 +106,12 @@ export async function getAllMembersGrouped(): Promise<
           const orderA = a.display_order ?? 0;
           // @ts-ignore
           const orderB = b.display_order ?? 0;
-          
+
           // 首先按 display_order 排序
           if (orderA !== orderB) {
             return orderA - orderB;
           }
-          
+
           // 如果 display_order 相同，按原有逻辑作为备用排序
           const yearA = a.enrollment_year ?? Infinity;
           const yearB = b.enrollment_year ?? Infinity;

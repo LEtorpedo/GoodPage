@@ -7,7 +7,7 @@ const YAML_DIR = path.join(process.cwd(), "data", "yaml");
 
 // YAML 文件验证选项
 const yamlValidationOptions = {
-  allowedExtensions: ['.yml', '.yaml'],
+  allowedExtensions: [".yml", ".yaml"],
   baseDirectory: YAML_DIR,
   maxFilenameLength: 30, // 更安全的文件名长度限制
   allowSubdirectories: false,
@@ -72,7 +72,10 @@ export async function POST(request: Request) {
     }
 
     // 安全验证文件名（使用增强验证，包含 Linux 特定检查）
-    const validation = validateFilePathEnhanced(file.name, yamlValidationOptions);
+    const validation = validateFilePathEnhanced(
+      file.name,
+      yamlValidationOptions
+    );
     if (!validation.isValid) {
       return NextResponse.json(
         { error: `无效的文件名: ${validation.error}` },
@@ -107,7 +110,9 @@ export async function POST(request: Request) {
     const buffer = Buffer.from(arrayBuffer);
     fs.writeFileSync(safePath, buffer);
 
-    console.log(`Successfully uploaded YAML file: ${validation.normalizedFilename}`);
+    console.log(
+      `Successfully uploaded YAML file: ${validation.normalizedFilename}`
+    );
 
     return NextResponse.json({
       success: true,
