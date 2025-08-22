@@ -1,9 +1,24 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import fs from "fs";
 import path from "path";
+import {
+  validateFilePathEnhanced,
+  safeReadFile,
+  safeFileExists
+} from "@/lib/security/filePathValidator";
 
 const prisma = new PrismaClient();
+
+// YAML 文件存储目录
+const YAML_DIR = path.join(process.cwd(), "data", "yaml");
+
+// YAML 文件验证选项
+const yamlValidationOptions = {
+  allowedExtensions: ['.yml', '.yaml'],
+  baseDirectory: YAML_DIR,
+  maxFilenameLength: 30, // 更安全的文件名长度限制
+  allowSubdirectories: false,
+};
 
 // 类型映射：YAML type → 数据库 PublicationType
 // 只取 '-' 前的部分进行映射
@@ -253,22 +268,39 @@ export async function POST(request: Request) {
 
     if (!fileName) {
       return NextResponse.json(
-        { error: "File name is required" },
+        { error: "文件名是必需的" },
         { status: 400 }
       );
     }
 
-    // 读取服务器上的 YAML 文件
-    const filePath = path.join(process.cwd(), "data", "yaml", fileName);
-
-    if (!fs.existsSync(filePath)) {
+    // 安全验证文件路径（使用增强验证，包含 Linux 特定检查）
+    const validation = validateFilePathEnhanced(fileName, yamlValidationOptions);
+    if (!validation.isValid) {
       return NextResponse.json(
-        { error: `File not found: ${fileName}` },
+        { error: `无效的文件名: ${validation.error}` },
+        { status: 400 }
+      );
+    }
+
+    // 使用验证后的安全路径
+    const safePath = validation.safePath!;
+
+    // 安全检查文件是否存在
+    if (!safeFileExists(safePath, YAML_DIR)) {
+      return NextResponse.json(
+        { error: "文件未找到" },
         { status: 404 }
       );
     }
 
-    const yamlContent = fs.readFileSync(filePath, "utf8");
+    // 安全读取文件内容
+    const yamlContent = safeReadFile(safePath, YAML_DIR);
+    if (yamlContent === null) {
+      return NextResponse.json(
+        { error: "无法读取文件" },
+        { status: 500 }
+      );
+    }
 
     // 解析 YAML
     let yamlData: any;
@@ -333,7 +365,7 @@ export async function POST(request: Request) {
         duplicatesSkipped: duplicates.length,
         total: yamlData.works.length,
         duplicateTitles: duplicates,
-        fileName: fileName || "unknown",
+        fileName: validation.normalizedFilename || "unknown",
       },
     });
   } catch (error) {

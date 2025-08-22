@@ -1,10 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import fs from "fs";
 import path from "path";
+import {
+  validateFilePathEnhanced,
+  safeReadFile,
+  safeFileExists
+} from "@/lib/security/filePathValidator";
 
 const prisma = new PrismaClient();
 const DBLP_DIR = path.join(process.cwd(), "data", "dblp");
+
+// DBLP 文件验证选项
+const dblpValidationOptions = {
+  allowedExtensions: ['.txt'],
+  baseDirectory: DBLP_DIR,
+  maxFilenameLength: 30, // 更安全的文件名长度限制
+  allowSubdirectories: false,
+};
 
 interface DblpPaper {
   title: string;
@@ -219,22 +231,39 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "文件名是必需的" }, { status: 400 });
     }
 
-    // 读取服务器上的 DBLP 文件
-    const filePath = path.join(DBLP_DIR, fileName);
-
-    if (!fs.existsSync(filePath)) {
+    // 安全验证文件路径（使用增强验证，包含 Linux 特定检查）
+    const validation = validateFilePathEnhanced(fileName, dblpValidationOptions);
+    if (!validation.isValid) {
       return NextResponse.json(
-        { error: `文件未找到: ${fileName}` },
+        { error: `无效的文件名: ${validation.error}` },
+        { status: 400 }
+      );
+    }
+
+    // 使用验证后的安全路径
+    const safePath = validation.safePath!;
+
+    // 安全检查文件是否存在
+    if (!safeFileExists(safePath, DBLP_DIR)) {
+      return NextResponse.json(
+        { error: "文件未找到" },
         { status: 404 }
       );
     }
 
-    const fileContent = fs.readFileSync(filePath, "utf8");
+    // 安全读取文件内容
+    const fileContent = safeReadFile(safePath, DBLP_DIR);
+    if (fileContent === null) {
+      return NextResponse.json(
+        { error: "无法读取文件" },
+        { status: 500 }
+      );
+    }
 
     // 解析 DBLP 文件
     let papers: DblpPaper[];
     try {
-      papers = parseDblpFile(fileContent, fileName);
+      papers = parseDblpFile(fileContent, validation.normalizedFilename!);
     } catch (error) {
       return NextResponse.json(
         { error: "无效的 DBLP 文件格式" },
@@ -301,7 +330,7 @@ export async function POST(request: NextRequest) {
         duplicatesSkipped: duplicates.length,
         total: papers.length,
         duplicateTitles: duplicates,
-        fileName: fileName,
+        fileName: validation.normalizedFilename!,
       },
     });
   } catch (error) {

@@ -1,8 +1,17 @@
 import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
+import { validateFilePathEnhanced } from "@/lib/security/filePathValidator";
 
 const DBLP_DIR = path.join(process.cwd(), "data", "dblp");
+
+// DBLP 文件验证选项
+const dblpValidationOptions = {
+  allowedExtensions: ['.txt'],
+  baseDirectory: DBLP_DIR,
+  maxFilenameLength: 30, // 更安全的文件名长度限制
+  allowSubdirectories: false,
+};
 
 /**
  * 获取所有可用的 DBLP 文件列表
@@ -62,10 +71,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "未提供文件" }, { status: 400 });
     }
 
-    // 验证文件类型
-    if (!file.name.match(/\.txt$/i)) {
+    // 安全验证文件名（使用增强验证，包含 Linux 特定检查）
+    const validation = validateFilePathEnhanced(file.name, dblpValidationOptions);
+    if (!validation.isValid) {
       return NextResponse.json(
-        { error: "只允许 .txt 格式的 DBLP 输出文件" },
+        { error: `无效的文件名: ${validation.error}` },
         { status: 400 }
       );
     }
@@ -83,11 +93,11 @@ export async function POST(request: Request) {
       fs.mkdirSync(DBLP_DIR, { recursive: true });
     }
 
-    // 检查文件是否已存在
-    const filePath = path.join(DBLP_DIR, file.name);
-    if (fs.existsSync(filePath)) {
+    // 使用验证后的安全路径
+    const safePath = validation.safePath!;
+    if (fs.existsSync(safePath)) {
       return NextResponse.json(
-        { error: `文件 "${file.name}" 已存在` },
+        { error: `文件 "${validation.normalizedFilename}" 已存在` },
         { status: 409 }
       );
     }
@@ -95,17 +105,17 @@ export async function POST(request: Request) {
     // 保存文件
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
-    fs.writeFileSync(filePath, buffer);
+    fs.writeFileSync(safePath, buffer);
 
-    console.log(`Successfully uploaded DBLP file: ${file.name}`);
+    console.log(`Successfully uploaded DBLP file: ${validation.normalizedFilename}`);
 
     return NextResponse.json({
       success: true,
-      message: `文件 "${file.name}" 上传成功`,
+      message: `文件 "${validation.normalizedFilename}" 上传成功`,
       data: {
-        name: file.name,
+        name: validation.normalizedFilename,
         size: file.size,
-        path: `/data/dblp/${file.name}`,
+        path: `/data/dblp/${validation.normalizedFilename}`,
       },
     });
   } catch (error) {
